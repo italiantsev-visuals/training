@@ -80,6 +80,33 @@ body { background: #111; color: #e0e0e0; font-family: -apple-system, BlinkMacSys
 .rem { font-size: 11px; padding: 5px 10px; background: #1a1a1a; border-radius: 5px; border-left: 2px solid #333; line-height: 1.5; color: #888; }
 .rem.r { border-left-color: #ef4444; } .rem.o { border-left-color: #f97316; }
 .rem.p { border-left-color: #a855f7; } .rem.g { border-left-color: #4ade80; }
+
+/* ── FAQ ACCORDION ── */
+.faq-section { margin-top: 28px; }
+.faq-group { margin-bottom: 6px; }
+.faq-group summary { list-style: none; display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 8px 12px; background: #1a1a1a; border-radius: 6px; font-size: 11px; font-weight: 700; color: #666; letter-spacing: .05em; text-transform: uppercase; user-select: none; }
+.faq-group summary::-webkit-details-marker { display: none; }
+.faq-group summary::after { content: '+'; font-size: 14px; color: #333; transition: transform .2s; }
+.faq-group[open] summary::after { content: '−'; color: #666; }
+.faq-group[open] summary { border-radius: 6px 6px 0 0; color: #aaa; }
+.faq-items { background: #161616; border-radius: 0 0 6px 6px; padding: 6px 0; }
+.faq-item { border: none; margin: 0; }
+.faq-item summary { list-style: none; display: flex; justify-content: space-between; cursor: pointer; padding: 7px 14px; font-size: 11px; color: #888; font-weight: 600; text-transform: none; letter-spacing: 0; background: transparent; border-radius: 0; user-select: none; }
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after { content: '›'; font-size: 14px; color: #333; transform: rotate(0deg); transition: transform .15s; display: inline-block; }
+.faq-item[open] summary::after { transform: rotate(90deg); color: #666; }
+.faq-item[open] summary { color: #ccc; }
+.faq-answer { padding: 4px 14px 10px 14px; font-size: 11px; color: #777; line-height: 1.7; border-top: 1px solid #1e1e1e; margin-top: 2px; }
+.faq-answer strong { color: #aaa; }
+
+/* ── COMPARE TABLE ── */
+.compare-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 6px; }
+.compare-table th { padding: 6px 10px; background: #1a1a1a; color: #555; font-weight: 700; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: .05em; }
+.compare-table td { padding: 6px 10px; border-bottom: 1px solid #1a1a1a; color: #888; vertical-align: top; line-height: 1.6; }
+.compare-table tr:last-child td { border-bottom: none; }
+.compare-table .cat { color: #555; font-weight: 600; }
+.compare-table .alex-c { color: #60a5fa; }
+.compare-table .lera-c { color: #f0a0ff; }
 </style>
 </head>
 <body>
@@ -195,6 +222,57 @@ body { background: #111; color: #e0e0e0; font-family: -apple-system, BlinkMacSys
 </div>
 <div style="height:30px"></div>
 
+<!-- FAQ АЛЕКС -->
+<div class="faq-section">
+<div class="sec-title">❓ FAQ</div>
+
+<details class="faq-group">
+<summary>Грудь</summary>
+<div class="faq-items">
+  <details class="faq-item"><summary>Почему я чувствую плечи вместо груди?</summary><div class="faq-answer">Ты <strong>жмёшь</strong> вместо того чтобы <strong>сводить</strong>. Думай «свожу бицепсы к центру», а не «толкаю вес вверх». Снизь вес на 15–20%, добавь паузу 1 сек в нижней точке. Face pull в конце каждой тренировки разгружает перегруженную переднюю дельту.</div></details>
+  <details class="faq-item"><summary>Грудь выглядит мягкой — мышцы или жир?</summary><div class="faq-answer">При 15–16% жира нижняя часть груди скрыта жиром — это не отставание мышц. Нижняя линия («подрезка») появится на <strong>12–13%</strong>. Для середины: cable fly с паузой 1–2 сек в сведении. Скинь 2–3 кг — грудь будет выглядеть иначе.</div></details>
+  <details class="faq-item"><summary>Какое упражнение делать первым?</summary><div class="faq-answer"><strong>Incline Bench Press (наклонный жим)</strong> — первым. Свежая мышца + верх груди — приоритет для визуального результата. Flat bench вторым или третьим.</div></details>
+  <details class="faq-item"><summary>Плечи болят при жиме — продолжать?</summary><div class="faq-answer">Снизь вес, не останавливайся полностью. Переключись на cable fly или low-to-high — меньше нагрузка на дельту. Сделай face pull или reverse fly в конце. <strong>Острая боль — стоп.</strong></div></details>
+</div>
+</details>
+
+<details class="faq-group">
+<summary>Подтягивания и спина</summary>
+<div class="faq-items">
+  <details class="faq-item"><summary>Как улучшить подтягивания (сейчас 6–9)?</summary><div class="faq-answer">Делай с лёгкой резинкой 3×8–10 (RIR 2–3) вместо 3×5–6 до отказа — больше объём = быстрее рост. В первых подходах останавливайся на 7–8, тогда третий будет 6–7, а не 5. Добавь <strong>Bicep Curl 3×12</strong> после каждой спинной — предплечья лимитируют подтягивания.</div></details>
+  <details class="faq-item"><summary>Перекос грудь > спина — насколько опасно?</summary><div class="faq-answer">360 подходов на грудь vs 281 на спину за полгода — дисбаланс ~28%. Долгосрочный риск: импиджмент, нарушение осанки. Идеал — тяга:жим = 1:1 или чуть в пользу тяги. Добавь 1 тягу к каждой грудной тренировке.</div></details>
+</div>
+</details>
+
+<details class="faq-group">
+<summary>Восстановление</summary>
+<div class="faq-items">
+  <details class="faq-item"><summary>Тренироваться если болят мышцы (крепатура)?</summary><div class="faq-answer">Другую группу — да. Болящую в тяжёлом режиме — нет. Лёгкое кардио (ролики/велик, пульс 130–145) ускоряет восстановление.</div></details>
+  <details class="faq-item"><summary>Пульс 124 через 2 мин после подхода — нормально?</summary><div class="faq-answer">Медленное восстановление = тело ещё не отдохнуло. Уменьши объём (2 подхода вместо 3), увеличь отдых до 2–3 мин. Не форсируй.</div></details>
+  <details class="faq-item"><summary>Сколько дней между тренировками одной группы?</summary><div class="faq-answer"><strong>48–72 часа</strong> минимум. Грудь пн → спина вт → грудь чт = нормально. Грудь пн → грудь вт = слишком рано, особенно при DOMS.</div></details>
+</div>
+</details>
+
+<details class="faq-group">
+<summary>Прогрессия и веса</summary>
+<div class="faq-items">
+  <details class="faq-item"><summary>Когда увеличивать вес?</summary><div class="faq-answer">Когда делаешь верхний конец диапазона (например, 15 из 12–15) с RIR 2–3 — добавь 5 lbs и снизь до нижней границы (12 повторений).</div></details>
+  <details class="faq-item"><summary>Что такое RIR и как применять?</summary><div class="faq-answer">RIR = Reps In Reserve. RIR 2–3 = останавливаешься когда мог бы сделать ещё 2–3 повтора. Все подходы кроме последнего — RIR 2–3. Последний — до отказа (RIR 0–1).</div></details>
+  <details class="faq-item"><summary>Каждую неделю нужен прогресс?</summary><div class="faq-answer">+1 повтор ИЛИ +2.5 lb в одном упражнении — этого достаточно. Постоянные маленькие шаги > редкие большие скачки.</div></details>
+</div>
+</details>
+
+<details class="faq-group">
+<summary>Пресс и жир</summary>
+<div class="faq-items">
+  <details class="faq-item"><summary>Почему не видно нижний пресс?</summary><div class="faq-answer">При 15–16% жира нижний живот прикрыт — это физиология. Нужно ~12–13% BF = минус 2–3 кг жира. <strong>Никакие упражнения на кор его не откроют</strong> — только дефицит калорий.</div></details>
+  <details class="faq-item"><summary>Как быстро скину 3 кг жира?</summary><div class="faq-answer">При твоей активности — 2–3 месяца. Дефицит 200–300 ккал, белок 1.8–2.0 г/кг (148–164 г/день), прогрессия в тренировках. Без жёсткой диеты.</div></details>
+</div>
+</details>
+
+</div><!-- /faq-section alex -->
+<div style="height:20px"></div>
+
 </div><!-- #alex-view -->
 
 
@@ -299,6 +377,73 @@ body { background: #111; color: #e0e0e0; font-family: -apple-system, BlinkMacSys
   <div class="rem g">✔ Руки подтянутся от дефицита калорий. Добавь Bicep Curl + Triceps Pushdown суперсетом в конце тренировки A.</div>
 </div>
 <div style="height:30px"></div>
+
+<!-- FAQ ЛЕРА -->
+<div class="faq-section">
+<div class="sec-title">❓ FAQ</div>
+
+<details class="faq-group">
+<summary>Поясница</summary>
+<div class="faq-items">
+  <details class="faq-item"><summary>Болит поясница — можно тренироваться?</summary><div class="faq-answer">Да, но исключи: становую с большим весом, гудморнинг, наклоны с гирей. Замени RDL на лёгкий вариант с гантелями (нейтральная спина, движение от бёдер). <strong>Планка и bird-dog</strong> укрепляют кор и снимают нагрузку с поясницы.</div></details>
+  <details class="faq-item"><summary>Болгарские и гоблет дают боль в пояснице — чем заменить?</summary><div class="faq-answer">Hip Abduction (тренажёр или резинка стоя), Cable Kickback, Leg Press, Lying Leg Curl. Закрывают ягодицы и ноги без поясничного стресса.</div></details>
+  <details class="faq-item"><summary>Какие упражнения укрепляют поясницу без риска?</summary><div class="faq-answer"><strong>Bird-dog 3×12, Glute Bridge без веса, Plank 3×30–45 сек, Dead Bug 3×10.</strong> Это фундамент — без него поясница будет болеть сильнее при любой нагрузке.</div></details>
+</div>
+</details>
+
+<details class="faq-group">
+<summary>Ягодицы и ноги</summary>
+<div class="faq-items">
+  <details class="faq-item"><summary>Как прокачать ягодицы при проблемной пояснице?</summary><div class="faq-answer">Glute Bridge / Hip Thrust (умеренный вес, поясница нейтральна), Cable Kickback стоя, Hip Abduction с резинкой, Leg Press (широкая постановка, пятки высоко). Минимальная нагрузка на поясницу, максимальное включение ягодиц.</div></details>
+  <details class="faq-item"><summary>Сколько раз в неделю тренировать ноги и ягодицы?</summary><div class="faq-answer"><strong>2 раза</strong> — обеспечивает Full Body A/B. При желании добавь 10 мин glute finisher в конец любой тренировки: резинка + ягодичный мостик.</div></details>
+</div>
+</details>
+
+<details class="faq-group">
+<summary>Похудение и питание</summary>
+<div class="faq-items">
+  <details class="faq-item"><summary>Хочу −3 кг — нужна жёсткая диета?</summary><div class="faq-answer">Нет. Дефицит <strong>200–250 ккал</strong> + белок 1.6–1.8 г/кг (88–99 г/день при 55 кг). Жёсткий дефицит убирает мышцы вместе с жиром — теряешь тонус, а не только вес.</div></details>
+  <details class="faq-item"><summary>Тренируюсь, но вес стоит — почему?</summary><div class="faq-answer">1) Нет дефицита — тело компенсирует аппетитом. 2) Мышцы растут пока жир уходит — вес не меняется, но состав тела улучшается. 3) Задержка воды в начале силовых (особенно у женщин). <strong>Замеряй объёмы</strong> (талия, бёдра) — они информативнее весов.</div></details>
+  <details class="faq-item"><summary>Нужно ли кардио для похудения?</summary><div class="faq-answer">Помогает, но не обязательно. Силовые эффективнее долгосрочно — мышцы повышают базальный метаболизм. Лучшая стратегия: <strong>силовые 3× + кардио 1–2×</strong> (прогулки, плавание, велосипед).</div></details>
+</div>
+</details>
+
+<details class="faq-group">
+<summary>Программа и тренировки</summary>
+<div class="faq-items">
+  <details class="faq-item"><summary>Full Body A/B — зачем два разных дня?</summary><div class="faq-answer">А и B нагружают те же группы под разными углами — разнообразие стимула предотвращает адаптацию. 4 тренировки за 2 недели = каждая мышечная группа 2× в неделю, что оптимально для роста.</div></details>
+  <details class="faq-item"><summary>Нужно ли тренироваться во время месячных?</summary><div class="faq-answer">Первые 1–2 дня если плохо — лёгкая активность или отдых. В остальное время — нормально. <strong>Фолликулярная фаза (дни 7–14)</strong> — лучшее время для силовых, эстроген помогает восстановлению. Лютеиновая фаза (перед менструацией) — снижена выносливость, нормально делать чуть меньше.</div></details>
+</div>
+</details>
+
+</div><!-- /faq-section lera -->
+
+<!-- СРАВНЕНИЕ АЛЕКС vs ЛЕРА -->
+<div class="faq-section">
+<div class="sec-title" style="color:#666">⚖️ Алекс vs Лера — в чём разница</div>
+<details class="faq-group" style="margin-bottom:0">
+<summary>Мужской vs женский тренинг — ключевые различия</summary>
+<div class="faq-items">
+<div style="padding:10px 14px">
+<table class="compare-table">
+  <tr><th>Параметр</th><th class="alex-c">💙 Алекс</th><th class="lera-c">💜 Лера</th></tr>
+  <tr><td class="cat">Гормоны</td><td>Тестостерон высокий → мышцы растут быстрее (+40–60% к скорости vs женщины)</td><td>Эстроген dominant → жир в бёдрах и ягодицах, мышцы растут медленнее но устойчивее</td></tr>
+  <tr><td class="cat">Скорость роста мышц</td><td>~1–2 кг мышц в месяц при идеальных условиях</td><td>~0.5–1 кг мышц в месяц — это нормально, не провал</td></tr>
+  <tr><td class="cat">Выносливость мышц</td><td>Быстрее устаёт, хорошо откликается на 6–10 повторений</td><td>Выше локальная выносливость → 12–20 повторений работают так же хорошо</td></tr>
+  <tr><td class="cat">Восстановление</td><td>Быстрее при большой нагрузке, хуже реагирует на хронический стресс</td><td>Эстроген ускоряет восстановление мышечных волокон, но гормональные циклы создают колебания</td></tr>
+  <tr><td class="cat">Приоритеты роста</td><td>Грудь, руки, подтягивания — верх тела</td><td>Ягодицы, бёдра, форма ног — низ тела</td></tr>
+  <tr><td class="cat">Жир и где уходит</td><td>Живот и бока — первыми набирает, первыми уходят</td><td>Бёдра и ягодицы — последними уходят (физиология, не ошибка программы)</td></tr>
+  <tr><td class="cat">Программа</td><td>Base+Rotation сплит, тяжёлые базовые в LA Fitness</td><td>Full Body A/B, равномерная нагрузка, щадит поясницу</td></tr>
+  <tr><td class="cat">Белок в день</td><td>148–164 г (1.8–2.0 г/кг × 83 кг)</td><td>88–99 г (1.6–1.8 г/кг × 55 кг)</td></tr>
+  <tr><td class="cat">Калорийный дефицит</td><td>200–300 ккал — body recomp</td><td>200–250 ккал — мягкое похудение без потери мышц</td></tr>
+  <tr><td class="cat">Главная ловушка</td><td>Перекос грудь > спина → проблемы с плечами</td><td>Игнорировать сигналы поясницы и «терпеть боль»</td></tr>
+</table>
+</div>
+</div>
+</details>
+</div>
+
+<div style="height:20px"></div>
 
 </div><!-- #lera-view -->
 
