@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<title>Fitness Dashboard</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #111; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding: 18px; max-width: 960px; }
+
+/* ── NAV ── */
+.nav { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
+.nav-label { font-size: 11px; color: #333; font-weight: 700; letter-spacing: .08em; }
+.person-btn { border: none; padding: 5px 16px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 700; background: #1a1a1a; color: #555; transition: background .15s; }
+.person-btn.active.alex { background: #1e3a5f; color: #60a5fa; }
+.person-btn.active.lera { background: #2a1840; color: #f0a0ff; }
+.nav a { font-size: 11px; background: #1a1a1a; color: #a855f7; padding: 4px 12px; border-radius: 5px; text-decoration: none; font-weight: 600; }
+
+/* ── PROFILE ── */
+.profile-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+@media(max-width:600px){ .profile-grid { grid-template-columns: 1fr 1fr; } }
+.pcard { background: #1a1a1a; border-radius: 10px; padding: 12px 16px; }
+.ptitle { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: #444; margin-bottom: 8px; font-weight: 600; }
+.pbody { font-size: 12px; color: #bbb; line-height: 1.75; }
+.pbody strong { color: #fff; }
+.clr-p { color: #a855f7; } .clr-o { color: #f97316; } .clr-g { color: #4ade80; }
+.clr-b { color: #60a5fa; } .clr-y { color: #fbbf24; } .clr-r { color: #ef4444; }
+
+/* ── SECTION ── */
+.sec-title { font-size: 14px; font-weight: 700; color: #fff; margin: 20px 0 10px; border-top: 1px solid #222; padding-top: 16px; }
+
+/* ── SCHEDULE ── */
+.dc { background: #1a1a1a; border-radius: 8px; padding: 9px 7px; }
+.dc-name { font-size: 10px; color: #444; margin-bottom: 3px; }
+.dc-type { font-size: 11px; font-weight: 700; margin-bottom: 5px; }
+.dc-body { font-size: 10px; color: #888; line-height: 1.65; }
+.dc-time { font-size: 9px; color: #2a2a2a; margin-top: 5px; }
+.gym-c { background: #1e1430; }
+.sep { color: #2a2a2a; }
+.em-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+.em-card { background: #1a1a1a; border-radius: 8px; padding: 10px 12px; font-size: 11px; color: #888; line-height: 1.65; }
+.em-title { font-weight: 600; margin-bottom: 5px; }
+
+/* ── CALENDAR ── */
+.cal-months-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px 24px; }
+@media(max-width:600px){ .cal-months-grid { grid-template-columns: 1fr 1fr; } }
+.month-block { }
+.month-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 5px; }
+.month-name { font-size: 12px; font-weight: 700; color: #ccc; }
+.month-ses { font-size: 10px; color: #555; }
+.month-peak { font-size: 10px; color: #a855f7; font-weight: 600; }
+.mg-row { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 4px; }
+.mg-badge { font-size: 9px; border-radius: 3px; padding: 1px 5px; font-weight: 600; }
+.mg-ok   { background: #1a2a1a; color: #4ade80; }
+.mg-low  { background: #2a2a0a; color: #fbbf24; }
+.mg-miss { background: #2a1a1a; color: #ef4444; }
+.recovery { font-size: 9px; color: #444; margin-bottom: 5px; }
+.cal-head { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; margin-bottom: 2px; }
+.cal-head span { font-size: 8px; color: #333; text-align: center; }
+.cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; }
+.day { border-radius: 2px; aspect-ratio: 1; cursor: default; position: relative; font-size: 8px; display: flex; align-items: flex-end; justify-content: flex-end; padding: 1px 2px; line-height: 1; }
+.d-empty { background: transparent; pointer-events: none; }
+.d-rest  { background: #1c1c1c; color: #2e2e2e; }
+.d-gym   { background: #5b21b6; color: rgba(255,255,255,0.45); cursor: pointer; }
+.d-gym:hover { background: #7c3aed; }
+
+/* ── TOOLTIP ── */
+#tip { display: none; position: fixed; z-index: 999; background: #1e1e1e; border: 1px solid #333; border-radius: 8px; padding: 10px 12px; font-size: 11px; color: #ccc; max-width: 280px; pointer-events: none; line-height: 1.6; box-shadow: 0 6px 24px rgba(0,0,0,.7); }
+#tip .tip-date { font-size: 12px; color: #fff; font-weight: 700; margin-bottom: 2px; }
+#tip .tip-dur  { font-size: 10px; color: #555; margin-bottom: 6px; }
+#tip .tip-sep  { height: 1px; background: #2a2a2a; margin: 4px 0; }
+#tip .ex-line  { display: flex; justify-content: space-between; gap: 10px; }
+#tip .ex-name  { color: #bbb; }
+#tip .ex-info  { color: #555; white-space: nowrap; font-size: 10px; }
+.mg-dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; margin-right: 3px; vertical-align: middle; }
+
+/* ── REMINDERS ── */
+.rem-grid { display: flex; flex-direction: column; gap: 4px; }
+.rem { font-size: 11px; padding: 5px 10px; background: #1a1a1a; border-radius: 5px; border-left: 2px solid #333; line-height: 1.5; color: #888; }
+.rem.r { border-left-color: #ef4444; } .rem.o { border-left-color: #f97316; }
+.rem.p { border-left-color: #a855f7; } .rem.g { border-left-color: #4ade80; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <span class="nav-label">FITNESS</span>
+  <button id="btn-alex" class="person-btn alex" onclick="switchPerson('alex')">💙 Алекс</button>
+  <button id="btn-lera" class="person-btn lera" onclick="switchPerson('lera')">💜 Лера</button>
+  <a href="menu/">🥗 Меню</a>
+</div>
+
+<div id="tip"></div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     АЛЕКС
+═══════════════════════════════════════════════════════════════════ -->
+<div id="alex-view">
+
+<div class="profile-grid">
+  <div class="pcard">
+    <div class="ptitle">Профиль</div>
+    <div class="pbody">
+      <strong>Алекс</strong><br>
+      34 года · <span class="clr-b">185 см</span><br>
+      Вес: <strong>83 кг</strong> · BF: <span class="clr-o">~15–16%</span><br>
+      Дом · Домашний зал · LA Fitness
+    </div>
+  </div>
+  <div class="pcard">
+    <div class="ptitle">Цели</div>
+    <div class="pbody">
+      Body recomp: <span class="clr-g">−2–3 кг жира</span><br>
+      Грудь ↑ · Руки ↑ · Подтягивания ↑<br>
+      2–3 сессии/нед<br>
+      <span style="color:#555;font-size:10px">Кардио: ролики / велик / ходьба</span>
+    </div>
+  </div>
+  <div class="pcard">
+    <div class="ptitle">Статистика — Strong CSV</div>
+    <div class="pbody">
+      Сессий: <span class="clr-p" style="font-weight:700;font-size:15px">104</span> · <span style="color:#555">апр 2025 — май 2026</span><br>
+      Среднее: <span class="clr-p">~7.4 / мес</span> · Пик: <span class="clr-p">дек'25 — 14</span><br>
+      Последняя: <span class="clr-g">21 мая 2026</span>
+    </div>
+  </div>
+  <div class="pcard">
+    <div class="ptitle">Питание — цель +5% к TDEE</div>
+    <div class="pbody">
+      <span style="color:#fff;font-weight:700;font-size:15px">2470</span> <span style="color:#555">ккал/день</span><br>
+      <span class="clr-g">Б</span> <strong>166г</strong> &nbsp;·&nbsp; <span class="clr-y">Ж</span> <strong>70г</strong> &nbsp;·&nbsp; <span class="clr-b">У</span> <strong>295г</strong><br>
+      <span style="color:#555;font-size:10px">TDEE ~2350 · Mifflin-St Jeor · акт. 1.55</span>
+    </div>
+  </div>
+</div>
+
+<div class="sec-title">🗓 Программа — База + Ротация</div>
+<div style="font-size:11px;color:#444;margin-bottom:10px">Каждая сессия = База + ротирующий блок · Ноги отдельно 1×/2 нед</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+  <div class="dc gym-c">
+    <div class="dc-name" style="font-size:11px;color:#60a5fa;font-weight:700;margin-bottom:6px">База (каждая сессия)</div>
+    <div class="dc-body">
+      <span style="color:#e879f9">Bench Press + Incline 3×8–12</span><br>
+      Seated Row 3×12<br>
+      Lat Pulldown / Pull Up 3×10–12<br>
+      <span class="sep">—</span><br>
+      <span class="clr-y">Lateral Raise 3×15 ← обязательно</span><br>
+      <span class="clr-o">Face Pull / Reverse Fly 3×15 ← обяз.</span>
+    </div>
+    <div class="dc-time">~40 мин базы</div>
+  </div>
+  <div class="dc gym-c">
+    <div class="dc-name" style="font-size:11px;color:#60a5fa;font-weight:700;margin-bottom:6px">Ротация A (сессии 1, 3)</div>
+    <div class="dc-body">
+      <span class="clr-g">Bicep Curl / Hammer Curl 3×12</span><br>
+      <span class="clr-g">Triceps Pushdown / Extension 3×12</span><br>
+      <span style="color:#555;font-size:9px">(суперсет — сразу после базы)</span>
+    </div>
+    <div class="dc-time">+10–15 мин</div>
+  </div>
+  <div class="dc gym-c">
+    <div class="dc-name" style="font-size:11px;color:#60a5fa;font-weight:700;margin-bottom:6px">Ноги · 1×/2 нед отдельно</div>
+    <div class="dc-body">
+      BSS 3×10 / RDL 3×12<br>
+      Leg Extension 3×15<br>
+      Leg Curl 3×12<br>
+      Calf Raise 3×20<br>
+      <span style="color:#555;font-size:9px">Дома: RDL→Ext→Curl→Calf</span>
+    </div>
+    <div class="dc-time">30–40 мин</div>
+  </div>
+</div>
+
+<div class="em-grid">
+  <div class="em-card"><div class="em-title clr-o">⚡ Аварийный режим · 30–40 мин</div>Bench 3×10 · Incline 3×10 · Seated Row 3×12 · Lat PD 3×12 · Lateral Raise 3×15 · Face Pull 3×15</div>
+  <div class="em-card"><div class="em-title clr-b">📍 Локации</div>LA Fitness → тяжёлые дни, штанги, прогрессия<br>Домашний зал → изоляция, техника, контроль<br>Дом → турник, подтягивания, лёгкие сессии</div>
+</div>
+
+<div class="sec-title">📅 Календарь тренировок</div>
+<div style="font-size:11px;color:#444;margin-bottom:12px">
+  <span style="display:inline-block;width:10px;height:10px;background:#5b21b6;border-radius:2px;vertical-align:middle;margin-right:4px"></span>Тренировка &nbsp;
+  <span style="display:inline-block;width:10px;height:10px;background:#1c1c1c;border-radius:2px;vertical-align:middle;margin-right:4px"></span>Отдых &nbsp;
+  <span style="color:#555;font-size:10px">(наведи на день — детали)</span>
+</div>
+<div class="cal-months-grid" id="alex-calendar"></div>
+
+<div class="sec-title" style="font-size:12px;color:#555;margin-top:20px">Важные правила</div>
+<div class="rem-grid">
+  <div class="rem o">⚡ Lateral Raise + Face Pull/Reverse Fly — в КАЖДОЙ сессии, не по остаточному принципу. Здоровье плеч важнее любого дополнительного упражнения.</div>
+  <div class="rem p">✦ Прогрессия: каждые 2 недели +2.5–5 lb в Bench Press или Incline Bench. Фиксируй веса.</div>
+  <div class="rem r">❌ Ноги — отдельная сессия. Не добавляй Leg Press в конце базовой — ноги деградируют по остаточному принципу.</div>
+  <div class="rem g">✔ Подтягивания: 3–4 подхода в каждую базовую сессию. Цель — 12+ чистых, потом добавлять вес.</div>
+</div>
+<div style="height:30px"></div>
+
+</div><!-- #alex-view -->
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     ЛЕРА
+═══════════════════════════════════════════════════════════════════ -->
+<div id="lera-view" style="display:none">
+
+<div class="profile-grid">
+  <div class="pcard">
+    <div class="ptitle">Профиль</div>
+    <div class="pbody">
+      <strong>Лера</strong><br>
+      ~32 года · <span class="clr-b">159 см</span><br>
+      Вес: <strong>55 кг</strong> · Цель: <span class="clr-g">52 кг</span><br>
+      Домашний зал + кабельная машина
+    </div>
+  </div>
+  <div class="pcard">
+    <div class="ptitle">Цели</div>
+    <div class="pbody">
+      Общий тонус + <span class="clr-g">−3 кг</span><br>
+      Ягодицы ↑ · Руки подтянуть<br>
+      <span style="color:#555;font-size:11px">Руки — от дефицита, не от недотренированности</span><br>
+      Full Body 2–3×/нед
+    </div>
+  </div>
+  <div class="pcard">
+    <div class="ptitle">Статистика — Strong CSV</div>
+    <div class="pbody">
+      Сессий: <span class="clr-p" style="font-weight:700;font-size:15px">59</span> · <span style="color:#555">сен 2025 — май 2026</span><br>
+      Среднее: <span class="clr-p">6.6 / мес</span> · Пик: <span class="clr-p">дек'25 — 9</span><br>
+      Макс. пауза: <span class="clr-o">~10 дн.</span> · Последняя: <span class="clr-g">21 мая 2026</span>
+    </div>
+  </div>
+  <div class="pcard">
+    <div class="ptitle">Питание — дефицит −12%</div>
+    <div class="pbody">
+      <span style="color:#fff;font-weight:700;font-size:15px">1665</span> <span style="color:#555">ккал/день</span><br>
+      <span class="clr-g">Б</span> <strong>110г</strong> &nbsp;·&nbsp; <span class="clr-y">Ж</span> <strong>45г</strong> &nbsp;·&nbsp; <span class="clr-b">У</span> <strong>205г</strong><br>
+      <span style="color:#555;font-size:10px">TDEE ~1903 · дефицит ~238 ккал</span>
+    </div>
+  </div>
+</div>
+
+<div class="sec-title">🗓 Full Body — ротация A / B</div>
+<div style="font-size:11px;color:#444;margin-bottom:10px">Чередуй A и B · 2–3 тренировки/нед · дни не фиксированы</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+  <div class="dc gym-c">
+    <div class="dc-name" style="font-size:11px;color:#f0a0ff;font-weight:700;margin-bottom:6px">Full Body A — акцент ягодицы/ноги</div>
+    <div class="dc-body">
+      <span style="color:#f0a0ff">Hip Thrust 3×12</span><br>
+      Leg Press / BSS 3×12 <span style="color:#333;font-size:9px">(легко, поясница)</span><br>
+      RDL 3×12 <span style="color:#333;font-size:9px">(контроль формы)</span><br>
+      <span class="sep">—</span><br>
+      Lat Pulldown 3×12<br>
+      Seated Row 3×12<br>
+      <span class="sep">—</span><br>
+      <span class="clr-y">Lateral Raise 3×15<br>Face Pull / Rev Fly 3×15</span><br>
+      <span class="clr-g">Bicep Curl → Tri Pushdown 3×(12+12)</span>
+    </div>
+    <div class="dc-time">~50–55 мин</div>
+  </div>
+  <div class="dc gym-c">
+    <div class="dc-name" style="font-size:11px;color:#f0a0ff;font-weight:700;margin-bottom:6px">Full Body B — акцент верх/кор</div>
+    <div class="dc-body">
+      <span style="color:#e879f9">Incline Bench Press 3×12</span><br>
+      Bench Press / Chest Press 3×12<br>
+      Lat Pulldown 3×12<br>
+      One-Arm Row 3×12<br>
+      <span class="sep">—</span><br>
+      <span style="color:#f0a0ff">Glute Kickback 3×15</span><br>
+      Leg Curl (Lying) 3×12<br>
+      <span class="sep">—</span><br>
+      <span class="clr-y">Lateral Raise 3×15<br>Reverse Fly 3×20</span><br>
+      <span class="clr-o">Cable Crunch / Knee Raise 3×15</span>
+    </div>
+    <div class="dc-time">~50–55 мин</div>
+  </div>
+</div>
+
+<div class="em-grid">
+  <div class="em-card"><div class="em-title clr-o">⚡ Аварийный режим · ~30 мин</div>Bench Press 3×10 · Lat PD 3×12 · Hip Thrust 3×12 · Lateral Raise 3×15 · Face Pull 3×15</div>
+  <div class="em-card"><div class="em-title clr-y">💡 Поясница болит — заменить</div>BSS → Hip Thrust или Leg Press<br>RDL → Leg Curl или Glute Kickback<br><span style="color:#333">Не терпи дискомфорт — меняй упражнение</span></div>
+</div>
+
+<div class="sec-title">📅 Календарь тренировок</div>
+<div style="font-size:11px;color:#444;margin-bottom:12px">
+  <span style="display:inline-block;width:10px;height:10px;background:#5b21b6;border-radius:2px;vertical-align:middle;margin-right:4px"></span>Тренировка &nbsp;
+  <span style="display:inline-block;width:10px;height:10px;background:#1c1c1c;border-radius:2px;vertical-align:middle;margin-right:4px"></span>Отдых &nbsp;
+  <span style="color:#555;font-size:10px">(наведи на день — детали)</span>
+</div>
+<div class="cal-months-grid" id="lera-calendar"></div>
+
+<div class="sec-title" style="font-size:12px;color:#555;margin-top:20px">Важные правила</div>
+<div class="rem-grid">
+  <div class="rem r">⚠ Поясница: BSS и RDL только с лёгким весом и идеальной техникой. Боль → сразу заменяй на Hip Thrust или Leg Press.</div>
+  <div class="rem r">❌ Бицепс — в каждой тренировке A. Bicep Curl 3×12 обязательно. «Дряблые руки» уйдут от дефицита + регулярного бицепса.</div>
+  <div class="rem o">⚠ Задняя дельта (Face Pull / Reverse Fly) — часто пропускается. Обязательно в каждой тренировке. Здоровье плеч.</div>
+  <div class="rem p">✦ Hip Thrust — приоритет номер 1. Прогрессируй вес каждые 2 недели. Это главное упражнение для ягодиц.</div>
+  <div class="rem g">✔ Руки подтянутся от дефицита калорий. Добавь Bicep Curl + Triceps Pushdown суперсетом в конце тренировки A.</div>
+</div>
+<div style="height:30px"></div>
+
+</div><!-- #lera-view -->
+
+
+<script>
+// ══════════════════════════════════════════════════════════
+// SESSION DATA — АЛЕКС
+// ══════════════════════════════════════════════════════════
+const alexSessions = {
+  '2025-04-16':{ dur:'1h 31m', ex:[["Seated Row",8,70,"back"],["Bench",4,140,"chest"],["Leg Extension",4,120,"quad"],["Incline Row",4,20,"back"],["Leg Curl",4,130,"hamstring"],["Pull Up",4,55,"back"],["Goblet Squat",5,50,"quad"],["Chest Fly",8,25,"chest"]] },
+  '2025-04-17':{ dur:'?', ex:[["Pull Up",2,85,"back"],["Strict Military Press",3,53,"shoulders"],["Chest Dip",4,120,"chest"],["Bench",4,55,"chest"],["Crossover",3,22,"chest"]] },
+  '2025-04-25':{ dur:'1h 29m', ex:[["Incline Bench",2,80,"chest"],["Curl",4,110,"biceps"],["Seated Row",3,42,"back"],["Pull Up",2,85,"back"],["Bench",4,180,"chest"],["Shrug",4,55,"traps"]] },
+  '2025-04-29':{ dur:'1h 3m', ex:[["Leg Extension",4,150,"quad"],["Chest Fly",3,35,"chest"],["Leg Curl",4,150,"hamstring"],["Goblet Squat",4,100,"quad"],["Incline Press",4,120,"chest"],["Calf Raise",3,0,"calves"]] },
+  '2025-05-08':{ dur:'51m', ex:[["Incline Bench",4,140,"chest"],["Inverted Row",4,0,"back"],["Seated Row",3,70,"back"],["Crossover",3,35,"chest"],["Lat Pulldown",4,100,"back"],["Bench",3,120,"chest"]] },
+  '2025-05-26':{ dur:'1h 20m', ex:[["Incline Bench",3,50,"chest"],["Pull Up",3,0,"back"],["Leg Extension",3,220,"quad"],["Seated Row",3,70,"back"],["Leg Curl",3,180,"hamstring"],["Crossover",4,25,"chest"],["Lat Pulldown",4,100,"back"],["Bench",4,180,"chest"],["Goblet Squat",3,100,"quad"]] },
+  '2025-06-06':{ dur:'1h 5m', ex:[["Incline Bench",3,100,"chest"],["Pull Up",3,0,"back"],["Crossover",3,25,"chest"],["Lat Pulldown",4,100,"back"],["Bench",5,180,"chest"],["BB Row",3,35,"back"]] },
+  '2025-06-12':{ dur:'1h 27m', ex:[["Incline Bench",4,50,"chest"],["Pull Up",3,0,"back"],["Seated Row",3,70,"back"],["Leg Curl",3,110,"hamstring"],["Crossover",3,27,"chest"],["Lat Pulldown",3,70,"back"],["Bench",4,185,"chest"],["Leg Press",4,450,"quad"]] },
+  '2025-06-16':{ dur:'1h 3m', ex:[["Crossover",3,35,"chest"],["Iso Chest Press",3,110,"chest"],["Lat Pulldown",4,100,"back"],["Seated Row",4,70,"back"],["Pull Up",3,0,"back"],["Incline Press",4,170,"chest"]] },
+  '2025-06-18':{ dur:'1h 7m', ex:[["Crossover",3,40,"chest"],["Lat Pulldown",3,100,"back"],["Seated Row",3,85,"back"],["Pull Up",3,10,"back"],["Bench",4,190,"chest"],["Incline Press",3,120,"chest"]] },
+  '2025-06-20':{ dur:'53m', ex:[["BSS",3,30,"quad"],["Leg Extension",3,190,"quad"],["Leg Curl",3,190,"hamstring"],["Goblet Squat",3,100,"quad"]] },
+  '2025-06-24':{ dur:'2h 13m', ex:[["Crossover",3,60,"chest"],["Leg Extension",2,200,"quad"],["Lat Pulldown",2,130,"back"],["Seated Row",3,100,"back"],["Leg Curl",2,200,"hamstring"],["Pull Up",2,5,"back"],["Bench",4,220,"chest"]] },
+  '2025-07-01':{ dur:'?', ex:[["Incline Bench",2,45,"chest"],["Pull Up",3,5,"back"],["Seated Row",3,70,"back"],["Crossover",3,40,"chest"],["BB Row",3,40,"back"],["Bench",5,200,"chest"]] },
+  '2025-07-05':{ dur:'1h 37m', ex:[["Incline Bench",3,135,"chest"],["Seated Leg Press",3,180,"quad"],["Pull Up",3,25,"back"],["Leg Extension",2,130,"quad"],["Lat Pulldown",3,115,"back"],["Seated Row",3,100,"back"],["Leg Curl",3,110,"hamstring"],["Chest Fly",3,115,"chest"],["Bench",2,145,"chest"]] },
+  '2025-07-08':{ dur:'?', ex:[["Crossover",3,35,"chest"],["Leg Extension",2,150,"quad"],["Seated Row",3,100,"back"],["Leg Curl",2,200,"hamstring"],["Lat Pulldown",3,130,"back"],["Bench",4,190,"chest"],["Incline Press",3,120,"chest"],["Goblet Squat",2,50,"quad"]] },
+  '2025-07-16':{ dur:'57m', ex:[["Seated Row",2,85,"back"],["Leg Extension",2,180,"quad"],["Leg Curl",2,190,"hamstring"],["Incline Chest Fly",2,25,"chest"],["Lat Pulldown",2,130,"back"],["Bench",4,200,"chest"],["Squat",2,100,"quad"]] },
+  '2025-07-19':{ dur:'44m', ex:[["Incline Bench",3,210,"chest"],["Leg Extension",2,220,"quad"],["Crunch",3,170,"core"],["Seated Row",2,100,"back"],["Leg Curl",3,210,"hamstring"],["Incline Chest Fly",2,30,"chest"],["Lat Pulldown",2,130,"back"],["Bench",1,50,"chest"]] },
+  '2025-07-21':{ dur:'1h 31m', ex:[["Incline Bench",3,52,"chest"],["Crunch",4,120,"core"],["Chest Fly",7,100,"chest"],["Bench",5,155,"chest"],["Leg Press",3,360,"quad"],["RDL",3,155,"hamstring"],["Squat",3,110,"quad"]] },
+  '2025-07-22':{ dur:'5h 24m', ex:[["Incline Bench",3,60,"chest"],["Crossover",3,18,"chest"],["Shrug",4,225,"traps"],["Pull Up",2,0,"back"],["BB Row",4,135,"back"]] },
+  '2025-07-24':{ dur:'43m', ex:[["Incline Press",3,180,"chest"],["Lat Pulldown",3,115,"back"],["Seated Row",3,85,"back"],["Crunch",2,160,"core"],["Crossover",4,35,"chest"]] },
+  '2025-07-29':{ dur:'1h 29m', ex:[["Seated Row",4,90,"back"],["Crunch",3,45,"core"],["Lat Pulldown",3,115,"back"],["Bicep Curl",3,60,"biceps"],["Arnold Press",3,40,"shoulders"],["Chest Fly",3,205,"chest"],["Bench",4,200,"chest"]] },
+  '2025-08-02':{ dur:'52m', ex:[["Seated Row",5,85,"back"],["Leg Extension",2,240,"quad"],["Crunch",2,140,"core"],["Leg Curl",3,200,"hamstring"],["Incline Chest Fly",2,35,"chest"],["Lat Pulldown",2,115,"back"],["Incline Press",3,200,"chest"]] },
+  '2025-08-11':{ dur:'?', ex:[["Crossover",2,18,"chest"],["Iso Chest Press",4,180,"chest"]] },
+  '2025-08-15':{ dur:'1h 1m', ex:[["Incline Bench",4,50,"chest"],["Crunch",4,130,"core"],["Seated Row",3,70,"back"],["Lat Pulldown",3,100,"back"],["Crossover",3,35,"chest"],["Seated OHP",3,35,"shoulders"]] },
+  '2025-08-18':{ dur:'1h 27m', ex:[["Leg Extension",2,175,"quad"],["Hack Squat",4,180,"quad"],["Leg Curl",2,110,"hamstring"],["Chest Dip",5,180,"chest"],["Chest Fly",3,100,"chest"],["Chest Press",4,180,"chest"],["Seated OHP",4,35,"shoulders"]] },
+  '2025-08-21':{ dur:'1h 6m', ex:[["Crossover",3,35,"chest"],["Face Pull",3,70,"rear_delt"],["Shoulder Press",3,100,"shoulders"],["Seated Row",4,100,"back"],["Pull Up",3,0,"back"],["Incline Press",5,180,"chest"]] },
+  '2025-08-23':{ dur:'1h 1m', ex:[["Leg Curl",3,130,"hamstring"],["Leg Extension",3,220,"quad"],["Calf Raise",3,270,"quad"],["Leg Press",3,360,"quad"],["Crunch",3,80,"core"]] },
+  '2025-08-29':{ dur:'57m', ex:[["Incline Press",4,200,"chest"],["Shoulder Press",3,110,"shoulders"],["Pull Up",6,0,"back"],["Seated Row",3,85,"back"],["Crossover",3,35,"chest"]] },
+  '2025-09-01':{ dur:'1h 13m', ex:[["Leg Extension",3,220,"quad"],["Crunch",2,130,"core"],["Shoulder Press",3,110,"shoulders"],["Seated Row",3,85,"back"],["Leg Curl",3,200,"hamstring"],["Incline Chest Fly",3,25,"chest"],["Incline Press",4,180,"chest"]] },
+  '2025-09-03':{ dur:'1h 3m', ex:[["Seated Row",2,110,"back"],["Iso Chest Press",3,160,"chest"],["Crunch",2,80,"core"],["Hack Press",2,230,"quad"],["Pull Up",3,5,"back"],["Chest Fly",3,100,"chest"],["Calf Raise",2,90,"calves"]] },
+  '2025-09-05':{ dur:'1h 40m', ex:[["Crossover Seated LA",3,18,"chest"],["Hack Squat",4,320,"quad"],["Leg Curl",3,138,"hamstring"],["Pull Up",3,0,"back"],["Bench",3,200,"chest"],["Chest Press",3,100,"chest"]] },
+  '2025-09-09':{ dur:'1h 22m', ex:[["Leg Extension",3,200,"quad"],["Crunch",2,120,"core"],["Lying Chest Press",3,180,"chest"],["Leg Curl",3,160,"hamstring"],["Crossover One Hand",3,35,"chest"],["Incline Press",3,120,"chest"],["Squat",3,200,"quad"]] },
+  '2025-09-16':{ dur:'50m', ex:[["Chest Fly",3,20,"chest"],["Decline Bench",3,145,"chest"],["Bench",3,185,"chest"]] },
+  '2025-09-19':{ dur:'1h 10m', ex:[["Incline Press",2,180,"chest"],["High Row",3,180,"back"],["BB Row",3,50,"back"],["Seated Row",4,100,"back"],["Shrug",3,205,"traps"]] },
+  '2025-09-23':{ dur:'1h 14m', ex:[["Incline Bench",3,48,"chest"],["Wrist Curl",2,30,"forearms"],["High Row",3,140,"back"],["Leverage Row",3,70,"back"],["Chest Fly",3,28,"chest"],["Decline Press",3,80,"chest"]] },
+  '2025-09-26':{ dur:'1h 8m', ex:[["Seated Row",2,85,"back"],["Wrist Curl",3,25,"forearms"],["Shoulder Press",3,90,"shoulders"],["Lying Chest Press",3,190,"chest"],["Lat Pulldown",3,115,"back"],["Incline Press",3,120,"chest"],["Dedlift",3,220,"other"]] },
+  '2025-09-30':{ dur:'1h 5m', ex:[["Crossover",3,25,"chest"],["Leg Extension",2,220,"quad"],["Shoulder Press",3,120,"shoulders"],["Seated Row",3,100,"back"],["Leg Curl",2,200,"hamstring"],["Lat Pulldown",3,115,"back"],["Bench",3,200,"chest"]] },
+  '2025-10-02':{ dur:'1h 35m', ex:[["Incline Bench",4,50,"chest"],["BSS",2,25,"quad"],["BB Row",3,40,"back"],["Pullover",3,40,"back"],["Lat Pulldown",3,115,"back"],["Leg Curl",2,160,"hamstring"],["Chest Fly",2,20,"chest"],["Bench",2,180,"chest"]] },
+  '2025-10-06':{ dur:'1h 18m', ex:[["Incline Bench",4,50,"chest"],["BSS",2,30,"quad"],["Pullover",2,40,"back"],["Leg Extension",2,220,"quad"],["Seated Row",3,100,"back"],["Leg Curl",2,170,"hamstring"],["Lat Pulldown",3,130,"back"],["Bench",2,50,"chest"]] },
+  '2025-10-13':{ dur:'1h 18m', ex:[["Incline Bench",3,150,"chest"],["Wrist Curl",3,25,"forearms"],["Back Extension",2,140,"back"],["Lat Pulldown",3,130,"back"],["Seated Row",2,85,"back"],["Crossover",3,30,"chest"],["BB Row",2,40,"back"],["Bench",3,180,"chest"]] },
+  '2025-10-16':{ dur:'56m', ex:[["Seated Row",2,100,"back"],["Iso Chest Press",4,180,"chest"],["Chest Dip",2,0,"chest"],["Leg Extension",2,200,"quad"],["Hack Press",2,270,"quad"],["Pull Up",2,0,"back"]] },
+  '2025-10-18':{ dur:'?', ex:[["Calf Raise",3,130,"calves"],["Hack Press",3,320,"quad"],["Leg Extension",3,200,"quad"],["Leg Curl",3,110,"hamstring"],["Crunch",2,45,"core"]] },
+  '2025-10-21':{ dur:'1h 6m', ex:[["Shoulder Press",3,120,"shoulders"],["Pull Up",4,0,"back"],["BB Row",2,40,"back"],["Bench",3,180,"chest"],["Crossover",3,25,"chest"]] },
+  '2025-10-24':{ dur:'1h 10m', ex:[["Leg Extension",2,205,"quad"],["Chest Dip",3,0,"chest"],["Wrist Curl",2,60,"forearms"],["Crunch",2,45,"core"],["Leg Curl",3,110,"hamstring"],["Incline Press",2,180,"chest"],["Chest Fly",2,82,"chest"],["Leg Press",2,450,"quad"]] },
+  '2025-10-27':{ dur:'1h 21m', ex:[["Chest Dip",3,0,"chest"],["Crunch",2,100,"core"],["Hack Squat",3,320,"quad"],["Leg Curl",3,120,"hamstring"],["T-Bar Row",3,70,"back"],["Pull Up",3,0,"back"],["Bench",3,185,"chest"]] },
+  '2025-10-30':{ dur:'1h 20m', ex:[["Incline Bench",3,70,"chest"],["Hack Squat",3,320,"quad"],["Lateral Raise",2,50,"lat_raise"],["Reverse Fly",2,85,"rear_delt"],["Leg Curl",2,125,"hamstring"],["Arnold Press",2,42,"shoulders"],["Pull Up",4,0,"back"],["Chest Fly",2,55,"chest"]] },
+  '2025-11-04':{ dur:'57m', ex:[["Leg Curl",2,170,"hamstring"],["BSS",2,30,"quad"],["Leg Extension",2,210,"quad"],["Crossover One Hand",3,25,"chest"],["Bench",3,50,"chest"]] },
+  '2025-11-05':{ dur:'47m', ex:[["Crunch",2,140,"core"],["Lat Pulldown",3,130,"back"],["Incline Row",2,35,"back"],["Face Pull",3,70,"rear_delt"],["Seated Row",3,100,"back"]] },
+  '2025-11-07':{ dur:'50m', ex:[["Crossover",2,30,"chest"],["Leg Extension",2,210,"quad"],["Lateral Raise",2,25,"lat_raise"],["Reverse Fly",2,15,"rear_delt"],["Leg Curl",2,160,"hamstring"],["Bench",2,50,"chest"],["Squat",3,100,"quad"]] },
+  '2025-11-10':{ dur:'1h 5m', ex:[["Lat Pulldown",2,145,"back"],["BSS",2,30,"quad"],["Crunch",1,160,"core"],["Seated Row",2,100,"back"],["Leg Curl",2,200,"hamstring"],["Pull Up",3,0,"back"],["Straight Arm PD",2,70,"back"]] },
+  '2025-11-13':{ dur:'1h 27m', ex:[["Leg Extension",2,200,"quad"],["Push Up With Blocks 1.5",2,0,"other"],["Leg Curl",2,180,"hamstring"],["Crossover One Hand",2,35,"chest"],["Bench",3,50,"chest"],["Goblet Squat",3,76,"quad"]] },
+  '2025-11-14':{ dur:'56m', ex:[["Seated Row",3,115,"back"],["Lateral Raise",2,25,"lat_raise"],["Reverse Fly",2,15,"rear_delt"],["Lat Pulldown",3,145,"back"],["Straight Arm PD",2,70,"back"],["Face Pull",3,40,"rear_delt"]] },
+  '2025-11-18':{ dur:'1h 8m', ex:[["Crossover",3,30,"chest"],["Leg Extension",3,220,"quad"],["Seated Row",3,100,"back"],["Leg Curl",3,180,"hamstring"],["Pull Up",4,0,"back"],["Bench",3,50,"chest"]] },
+  '2025-11-20':{ dur:'1h 4m', ex:[["Seated Row",3,160,"back"],["Lateral Raise",2,15,"lat_raise"],["Face Pull",2,35,"rear_delt"],["Reverse Fly",2,100,"rear_delt"],["Incline Press",2,180,"chest"],["Pull Up",4,0,"back"],["Chest Fly",3,70,"chest"]] },
+  '2025-11-24':{ dur:'1h 5m', ex:[["Crossover",4,20,"chest"],["Seated Row",3,90,"back"],["Leg Curl",2,170,"hamstring"],["Incline Press",3,180,"chest"],["Lat Pulldown",3,150,"back"],["Leg Press",3,450,"quad"]] },
+  '2025-11-27':{ dur:'1h 7m', ex:[["Crossover",2,40,"chest"],["BSS",2,30,"quad"],["Back Extension",2,120,"back"],["Crossover One Hand",2,35,"chest"],["Leg Curl",2,190,"hamstring"],["Incline Bench",3,50,"chest"]] },
+  '2025-11-29':{ dur:'54m', ex:[["Seated Row",3,100,"back"],["Lateral Raise",3,20,"lat_raise"],["Bicep Curl",3,100,"biceps"],["Lat Pulldown",3,130,"back"],["Straight Arm PD",2,100,"back"],["Triceps Pushdown",3,100,"back"],["Face Pull",3,50,"rear_delt"]] },
+  '2025-12-03':{ dur:'1h 3m', ex:[["Lat Pulldown",2,140,"back"],["Seated Row",3,180,"back"],["Push Up With Blocks 1.5",3,0,"other"],["Chest Fly",3,18,"chest"],["Decline Press",2,230,"chest"],["Seated OHP",3,50,"shoulders"]] },
+  '2025-12-05':{ dur:'44m', ex:[["BSS",2,30,"quad"],["Leg Curl",3,190,"hamstring"],["Face Pull",3,70,"rear_delt"],["Lateral Raise",3,25,"lat_raise"]] },
+  '2025-12-10':{ dur:'1h', ex:[["Shoulder Press",2,120,"shoulders"],["Pull Up",3,0,"back"],["Lying Chest Press",3,200,"chest"],["Straight Arm PD",4,70,"back"],["Crossover",2,35,"chest"]] },
+  '2025-12-11':{ dur:'1h 2m', ex:[["Triceps Pushdown",3,50,"back"],["Lateral Raise",3,90,"lat_raise"],["Reverse Fly",3,70,"rear_delt"],["Leg Curl",3,170,"hamstring"],["Bicep Curl",3,50,"biceps"],["Leg Press",3,630,"quad"]] },
+  '2025-12-14':{ dur:'1h 7m', ex:[["Crossover",3,35,"chest"],["Crunch",2,150,"core"],["Lateral Raise",2,25,"lat_raise"],["Shoulder Press",2,140,"shoulders"],["Reverse Fly",3,15,"rear_delt"],["Lying Chest Press",3,200,"chest"],["Face Pull",2,50,"rear_delt"]] },
+  '2025-12-15':{ dur:'48m', ex:[["Straight Arm PD",3,35,"back"],["Lat Pulldown",3,130,"back"],["Triceps Extension",3,50,"triceps"],["Seated Row",3,100,"back"],["Bicep Curl",3,50,"biceps"]] },
+  '2025-12-17':{ dur:'1h 17m', ex:[["OHP",3,95,"shoulders"],["Chest Dip",3,0,"chest"],["Lateral Raise",3,8,"lat_raise"],["Reverse Fly",3,8,"rear_delt"],["Bench",3,185,"chest"],["Face Pull",3,22,"rear_delt"]] },
+  '2025-12-18':{ dur:'1h 17m', ex:[["Seated Row",3,120,"back"],["Triceps Pushdown",3,50,"back"],["Bicep Curl",3,50,"biceps"],["Leg Curl",3,120,"hamstring"],["Lat Pulldown",3,160,"back"],["Leg Press",3,540,"quad"]] },
+  '2025-12-20':{ dur:'1h 17m', ex:[["Lateral Raise",3,15,"lat_raise"],["Shoulder Press",2,110,"shoulders"],["Reverse Fly",3,10,"rear_delt"],["Pec Dec",3,70,"chest"],["Chest Press",3,180,"chest"],["Face Pull",3,30,"rear_delt"]] },
+  '2025-12-21':{ dur:'1h 9m', ex:[["Seated Row",3,100,"back"],["High Row",4,120,"back"],["Bicep Curl",3,50,"biceps"],["Leg Curl",3,150,"hamstring"],["Lat Pulldown",3,160,"back"],["Triceps Extension",3,50,"triceps"],["Leg Press",3,630,"quad"]] },
+  '2025-12-23':{ dur:'1h 51m', ex:[["Lateral Raise",3,12,"lat_raise"],["Chets fly",4,85,"chest"],["Face Pull",3,30,"rear_delt"],["Reverse Fly",3,85,"rear_delt"],["Bench",4,70,"chest"],["Seated OHP",3,50,"shoulders"]] },
+  '2025-12-26':{ dur:'1h 28m', ex:[["Lateral Raise",3,25,"lat_raise"],["Face Pull",3,50,"rear_delt"],["Reverse Fly",3,25,"rear_delt"],["Low-Hi Fly",3,50,"chest"],["Straight Arm PD",3,70,"back"],["Pull Up",3,0,"back"],["Chest Press",3,80,"chest"]] },
+  '2025-12-29':{ dur:'1h 25m', ex:[["Triceps Extension",3,50,"triceps"],["Lateral Raise",3,25,"lat_raise"],["Shoulder Press",3,100,"shoulders"],["Bicep Curl",3,50,"biceps"],["Low-Hi Fly",3,25,"chest"],["Bench",3,180,"chest"],["Face Pull",3,30,"rear_delt"]] },
+  '2025-12-30':{ dur:'1h 20m', ex:[["Seated Row",3,85,"back"],["Leg Extension",3,200,"quad"],["Leg Curl",3,150,"hamstring"],["Straight Arm PD",3,35,"back"],["Pull Up",3,0,"back"],["Goblet Squat",3,50,"quad"]] },
+  '2026-01-03':{ dur:'59m', ex:[["Incline Press",3,160,"chest"],["Shoulder Press",3,70,"shoulders"],["Chest Fly",3,70,"chest"],["Face Pull",3,12,"rear_delt"],["Lateral Raise",3,8,"lat_raise"]] },
+  '2026-01-04':{ dur:'1h 2m', ex:[["Seated Row",3,120,"back"],["Bicep Curl",3,50,"biceps"],["Wrist Curl",2,40,"forearms"],["Reverse Fly",3,10,"rear_delt"],["Rev Wrist Curl",2,20,"forearms"],["Straight Arm PD",3,50,"back"],["Triceps Extension",3,50,"triceps"]] },
+  '2026-01-07':{ dur:'58m', ex:[["Crossover",3,30,"chest"],["Bicep Curl",3,70,"biceps"],["Triceps Extension",3,70,"triceps"],["Lateral Raise",3,20,"lat_raise"],["Shoulder Press",2,110,"shoulders"],["Reverse Fly",3,20,"rear_delt"],["Bench",3,200,"chest"]] },
+  '2026-01-09':{ dur:'1h 3m', ex:[["Straight Arm PD",3,32,"back"],["Hack Squat",3,360,"quad"],["Seated Row",3,100,"back"],["Leg Curl",3,100,"hamstring"],["Lat Pulldown",3,130,"back"]] },
+  '2026-01-13':{ dur:'50m', ex:[["Seated Row",3,100,"back"],["Triceps Extension",3,100,"triceps"],["Bicep Curl",3,100,"biceps"],["Lat Pulldown",3,130,"back"],["Straight Arm PD",3,50,"back"],["Scapular PU",3,0,"back"]] },
+  '2026-01-15':{ dur:'1h 11m', ex:[["Incline Bench",3,60,"chest"],["Hack Squat",3,330,"quad"],["Lateral Raise",3,12,"lat_raise"],["Reverse Fly",3,10,"rear_delt"],["Incline Chest Fly",3,18,"chest"],["Seated OHP",3,40,"shoulders"]] },
+  '2026-01-18':{ dur:'59m', ex:[["Crossover",3,30,"chest"],["Lateral Raise",3,20,"lat_raise"],["Lat Pulldown",3,130,"back"],["Seated Row",3,85,"back"],["Reverse Fly",3,20,"rear_delt"],["Bench",3,200,"chest"]] },
+  '2026-01-23':{ dur:'1h 1m', ex:[["Incline Bench",3,50,"chest"],["Reverse Fly",3,15,"rear_delt"],["Incline Chest Fly",3,15,"chest"],["Lat Pulldown",3,130,"back"],["Seated Row",3,100,"back"],["Seated OHP",2,35,"shoulders"]] },
+  '2026-01-26':{ dur:'1h 16m', ex:[["Incline Bench",3,50,"chest"],["Lateral Raise",2,10,"lat_raise"],["Triceps Extension",2,35,"triceps"],["Reverse Fly",2,10,"rear_delt"],["Seated Row",3,115,"back"],["Incline Chest Fly",2,15,"chest"],["Lat Pulldown",3,145,"back"],["Bicep Curl",2,20,"biceps"],["Seated OHP",2,35,"shoulders"]] },
+  '2026-01-29':{ dur:'1h 26m', ex:[["Incline Bench",3,155,"chest"],["Pull Up",3,0,"back"],["Lateral Raise",3,10,"lat_raise"],["Triceps Extension",2,45,"triceps"],["Face Pull",2,30,"rear_delt"],["OHP",3,95,"shoulders"],["Reverse Fly",3,90,"rear_delt"],["BB Row",3,95,"back"],["Bicep Curl",2,45,"biceps"],["Chest Fly",3,90,"chest"]] },
+  '2026-02-03':{ dur:'1h 22m', ex:[["SA Row",2,60,"back"],["Lateral Raise",2,25,"lat_raise"],["Shoulder Press",2,100,"shoulders"],["Reverse Fly",2,30,"rear_delt"],["Crossover",2,30,"chest"],["Straight Arm PD",3,60,"back"],["Pull Up",4,13,"back"],["Bench",3,200,"chest"],["Shrug",2,200,"traps"]] },
+  '2026-02-08':{ dur:'1h 10m', ex:[["SA Row",3,60,"back"],["Lateral Raise",2,20,"lat_raise"],["Reverse Fly",2,30,"rear_delt"],["Low-Hi Fly",3,30,"chest"],["Pull Up",3,0,"back"],["Bench",3,210,"chest"]] },
+  '2026-02-10':{ dur:'41m', ex:[["Straight Arm PD",2,60,"back"],["Lat Pulldown",3,145,"back"],["Goblet Squat",2,72,"quad"],["Seated Row",3,115,"back"],["Leg Curl",2,150,"hamstring"]] },
+  '2026-02-11':{ dur:'1h 9m', ex:[["Incline Bench",3,65,"chest"],["Bicep Curl",2,45,"biceps"],["Triceps Extension",2,45,"triceps"],["Reverse Fly",2,60,"rear_delt"],["Chest Fly",3,80,"chest"],["Bench",3,55,"chest"],["Crunch",3,70,"core"]] },
+  '2026-02-14':{ dur:'1h 24m', ex:[["Crossover",3,17,"chest"],["Seated Row",3,95,"back"],["Lateral Raise",3,17,"lat_raise"],["Reverse Fly",3,10,"rear_delt"],["Low-Hi Fly",3,17,"chest"],["Lat Pulldown",3,50,"back"],["Incline Press",3,150,"chest"],["Crunch",2,68,"core"]] },
+  '2026-02-16':{ dur:'41m', ex:[["Hack Squat",3,410,"quad"],["RDL",3,165,"hamstring"],["Leg Curl",2,90,"hamstring"]] },
+  '2026-02-27':{ dur:'1h 10m', ex:[["Crossover",3,25,"chest"],["Crunch",2,140,"core"],["Lateral Raise",2,20,"lat_raise"],["Reverse Fly",2,20,"rear_delt"],["Lat Pulldown",3,130,"back"],["Bench",3,200,"chest"],["Seated Row",3,100,"back"]] },
+  '2026-03-02':{ dur:'1h 21m', ex:[["Seated Row",3,120,"back"],["Lateral Raise",2,10,"lat_raise"],["Reverse Fly",2,110,"rear_delt"],["Lat Pulldown",4,140,"back"],["Bench",3,165,"chest"],["Incline Press",3,110,"chest"]] },
+  '2026-03-13':{ dur:'1h 35m', ex:[["Incline Bench",2,140,"chest"],["Lateral Raise",2,15,"lat_raise"],["Crunch",2,100,"core"],["Reverse Fly",2,30,"rear_delt"],["Seated Row",3,85,"back"],["Crossover",3,35,"chest"],["Lat Pulldown",3,115,"back"],["Bench",3,180,"chest"]] },
+  '2026-03-16':{ dur:'1h 5m', ex:[["Seated Row",3,85,"back"],["Crunch",2,120,"core"],["Lateral Raise",2,20,"lat_raise"],["Reverse Fly",2,20,"rear_delt"],["Low-Hi Fly",3,20,"chest"],["Lat Pulldown",3,130,"back"],["Bench",3,55,"chest"]] },
+  '2026-03-17':{ dur:'35m', ex:[["Goblet Squat",3,50,"quad"],["Leg Extension",2,200,"quad"],["RDL",3,45,"hamstring"],["Leg Curl",2,150,"hamstring"]] },
+  '2026-03-21':{ dur:'37m', ex:[["Crunch",2,120,"core"],["Lateral Raise",2,10,"lat_raise"],["Chest Fly",3,15,"chest"],["Reverse Fly",3,10,"rear_delt"],["Incline Bench",3,40,"chest"]] },
+  '2026-03-22':{ dur:'54m', ex:[["Leg Extension",4,180,"quad"],["BSS",2,20,"quad"],["Leg Curl",3,150,"hamstring"],["Lat Pulldown",3,115,"back"],["Straight Arm PD",2,80,"back"],["SA Row",2,40,"back"]] },
+  '2026-03-26':{ dur:'55m', ex:[["Incline Bench",2,130,"chest"],["Reverse Fly",2,20,"rear_delt"],["Low-Hi Fly",2,20,"chest"],["Lat Pulldown",3,115,"back"],["Bench",3,180,"chest"],["Seated Row",3,85,"back"]] },
+  '2026-03-30':{ dur:'1h 4m', ex:[["Incline Bench",2,120,"chest"],["Leg Extension",4,180,"quad"],["Crunch",3,120,"core"],["Leg Curl",3,150,"hamstring"],["Low-Hi Fly",2,20,"chest"],["Bench",3,190,"chest"]] },
+  '2026-04-02':{ dur:'1h 19m', ex:[["Seated Row",3,85,"back"],["Crunch",2,100,"core"],["Lateral Raise",2,10,"lat_raise"],["Reverse Fly",2,10,"rear_delt"],["Low-Hi Fly",3,20,"chest"],["Straight Arm PD",2,40,"back"],["Lat Pulldown",4,115,"back"],["Bench",3,50,"chest"]] },
+  '2026-04-08':{ dur:'1h 17m', ex:[["Lat Pulldown",3,130,"back"],["Iso Chest Press",4,140,"chest"],["Lateral Raise",3,12,"lat_raise"],["Reverse Fly",2,70,"rear_delt"],["Chest Fly",2,70,"chest"],["Straight Arm PD",2,40,"back"],["SA Row",4,58,"back"]] },
+  '2026-04-13':{ dur:'1h 2m', ex:[["Straight Arm PD",2,50,"back"],["Pull Up",4,45,"back"],["Crossover One Hand",3,40,"chest"],["Seated Row",3,85,"back"],["Incline Bench",4,150,"chest"]] },
+  '2026-04-22':{ dur:'1h 12m', ex:[["Incline Bench",3,40,"chest"],["Lat Pulldown",4,130,"back"],["Seated Row",3,85,"back"],["Straight Arm PD",2,25,"back"],["Crossover One Hand",3,25,"chest"],["Bench",3,50,"chest"]] },
+  '2026-04-24':{ dur:'1h 17m', ex:[["Incline Bench",2,115,"chest"],["Wrist Curl",3,50,"forearms"],["Lateral Raise",3,60,"lat_raise"],["Rev Wrist Curl",3,20,"forearms"],["T-Bar Row",3,90,"back"],["Pull Up",3,25,"back"],["Bench",3,155,"chest"]] },
+  '2026-05-05':{ dur:'1h 38m', ex:[["Lat Pulldown",3,120,"back"],["Iso Row",3,140,"back"],["Triceps Extension",2,42,"triceps"],["Lateral Raise",2,12,"lat_raise"],["Reverse Fly",3,80,"rear_delt"],["Bicep Curl",2,42,"biceps"],["Chest Fly",3,80,"chest"],["Bench",3,185,"chest"],["Decline Press",3,100,"chest"],["Crunch",2,72,"core"]] },
+  '2026-05-18':{ dur:'29m', ex:[["Lat Pulldown",2,130,"back"],["Pec Dec",2,100,"chest"],["Seated Row",2,100,"back"],["Reverse Fly",2,85,"rear_delt"],["Bench",2,135,"chest"]] },
+  '2026-05-21':{ dur:'1h 10m', ex:[["Lat Pulldown",2,180,"back"],["Bicep Curl",2,42,"biceps"],["Crunch",2,70,"core"],["Lateral Raise",2,8,"lat_raise"],["Reverse Fly",3,115,"rear_delt"],["T-Bar Row",3,115,"back"],["Chest Fly",3,80,"chest"],["Bench",3,165,"chest"],["Triceps Pushdown",2,42,"back"]] },
+};
+
+const alexMonthlyMG = {
+  '2025-04':{ ses:4,hamstring:8,calves:3,biceps:4,shoulders:3,chest:36,back:23,quad:17,traps:4 },
+  '2025-05':{ ses:2,hamstring:3,chest:21,back:21,quad:6 },
+  '2025-06':{ ses:6,hamstring:8,chest:49,back:46,quad:15 },
+  '2025-07':{ ses:9,hamstring:13,biceps:3,shoulders:3,chest:75,back:51,quad:21,core:12,traps:4 },
+  '2025-08':{ ses:7,hamstring:8,shoulders:13,chest:45,back:29,quad:17,core:9,rear_delt:3 },
+  '2025-09':{ ses:9,calves:2,hamstring:11,forearms:5,chest:63,shoulders:9,quad:17,core:6,other:3,back:38,traps:3 },
+  '2025-10':{ ses:9,hamstring:15,calves:3,shoulders:5,chest:53,back:46,quad:26,core:6,rear_delt:2,lat_raise:2,forearms:5 },
+  '2025-11':{ ses:11,hamstring:15,biceps:3,other:2,chest:40,back:58,quad:24,core:3,rear_delt:17,lat_raise:9 },
+  '2025-12':{ ses:14,triceps:9,biceps:15,quad:17,shoulders:18,back:58,chest:48,core:2,other:3,lat_raise:23,hamstring:15,rear_delt:38 },
+  '2026-01':{ ses:10,back:51,hamstring:3,biceps:13,triceps:13,chest:41,shoulders:15,quad:6,rear_delt:25,lat_raise:17,forearms:4 },
+  '2026-02':{ ses:7,triceps:2,biceps:2,quad:5,back:35,traps:2,chest:35,core:7,lat_raise:9,hamstring:7,rear_delt:11,shoulders:2 },
+  '2026-03':{ ses:8,hamstring:11,chest:40,back:32,quad:15,core:9,rear_delt:11,lat_raise:8 },
+  '2026-04':{ ses:5,forearms:6,chest:33,back:42,core:2,rear_delt:4,lat_raise:8 },
+  '2026-05':{ ses:3,biceps:4,triceps:2,chest:19,back:17,core:4,rear_delt:8,lat_raise:4 },
+};
+
+const alexCalMonths = [[2025,3],[2025,4],[2025,5],[2025,6],[2025,7],[2025,8],[2025,9],[2025,10],[2025,11],[2026,0],[2026,1],[2026,2],[2026,3],[2026,4]];
+const alexMgTargets = { chest:15, back:15, lat_raise:9, rear_delt:9, biceps:6, triceps:6, quad:4, hamstring:4 };
+const alexMgColor = { chest:'#e879f9', back:'#60a5fa', quad:'#34d399', hamstring:'#2dd4bf', rear_delt:'#f97316', lat_raise:'#fb923c', biceps:'#a3e635', triceps:'#86efac', core:'#64748b', shoulders:'#facc15', traps:'#94a3b8', other:'#374151', calves:'#6ee7b7', forearms:'#7dd3fc' };
+const alexMgLabel = { chest:'Грудь', back:'Спина', lat_raise:'Латерал', rear_delt:'Задн.Δ', biceps:'Бицепс', triceps:'Трицепс', quad:'Квадр', hamstring:'Б.бедра' };
+
+// ══════════════════════════════════════════════════════════
+// SESSION DATA — ЛЕРА
+// ══════════════════════════════════════════════════════════
+const leraSessions = {
+  '2025-09-30':{ dur:'1h 10m', ex:[["Shoulder Press",3,10,"shoulders"],["Crunch",3,0,"core"],["Romanian Deadlift",3,25,"hamstring"],["Seated Row",3,25,"back"],["Bulgarian Split Squat",3,15,"quad"],["Incline Chest Press",3,25,"chest"],["Lat Pulldown",3,40,"back"],["Bench Dip",3,0,"triceps"],["Hip Thrust",3,44,"glutes"]] },
+  '2025-10-07':{ dur:'1h', ex:[["Bench Press",3,20,"chest"],["Bench Dip",3,0,"triceps"],["Seated Row",3,10,"back"],["Lat Pulldown",3,40,"back"],["Shoulder Press",3,10,"shoulders"],["Lunge",3,20,"quad"],["Hip Thrust",3,44,"glutes"]] },
+  '2025-10-13':{ dur:'1h 17m', ex:[["Goblet Squat (Kettlebell)",3,35,"quad"],["Crunch",3,0,"core"],["Romanian Deadlift",3,40,"hamstring"],["Seated Row",3,25,"back"],["Incline Chest Press",3,20,"chest"],["Lat Pulldown",3,40,"back"],["Shoulder Press",3,10,"shoulders"],["Bench Dip",3,0,"triceps"],["Hip Thrust",3,44,"glutes"]] },
+  '2025-10-18':{ dur:'56m', ex:[["Goblet Squat (Kettlebell)",3,40,"quad"],["Romanian Deadlift",3,50,"hamstring"],["Seated Row",3,25,"back"],["Iso-Lateral Chest Press",3,20,"chest"],["Lat Pulldown",3,40,"back"],["Hip Abductor",3,130,"glutes"]] },
+  '2025-10-21':{ dur:'1h 12m', ex:[["Shoulder Press",3,10,"shoulders"],["Crunch",3,0,"core"],["Romanian Deadlift",3,40,"hamstring"],["Seated Row",3,25,"back"],["Bulgarian Split Squat",3,40,"quad"],["Incline Chest Press",3,20,"chest"],["Lat Pulldown",3,40,"back"],["Bench Dip",3,0,"triceps"],["Hip Thrust",3,44,"glutes"]] },
+  '2025-10-24':{ dur:'59m', ex:[["Goblet Squat (Kettlebell)",3,40,"quad"],["Crunch",3,0,"core"],["Romanian Deadlift",3,60,"hamstring"],["Seated Row",3,25,"back"],["Lat Pulldown",3,40,"back"],["Shoulder Press",3,15,"shoulders"],["Chest Press",3,30,"chest"]] },
+  '2025-10-27':{ dur:'1h 8m', ex:[["Chest Dip",3,40,"other"],["Decline Bench Press",3,20,"chest"],["Crunch",3,0,"core"],["Seated Row",3,30,"back"],["Lat Pulldown",3,50,"back"],["Leg Press",3,110,"quad"],["Hip Thrust",3,50,"glutes"]] },
+  '2025-10-30':{ dur:'1h 2m', ex:[["Incline Chest Press",3,20,"chest"],["Chest Dip",3,0,"other"],["Romanian Deadlift",3,50,"hamstring"],["Hip Abductor",3,150,"glutes"],["Seated Row",3,30,"back"],["Bulgarian Split Squat",3,40,"quad"],["Chin Up",3,0,"back"],["Crunch",3,0,"core"]] },
+  '2025-11-04':{ dur:'57m', ex:[["Goblet Squat (Kettlebell)",3,40,"quad"],["Crunch",2,0,"core"],["Romanian Deadlift",3,40,"hamstring"],["Seated Row",3,25,"back"],["Incline Chest Press",3,30,"chest"],["Lat Pulldown",3,40,"back"],["Shoulder Press",3,20,"shoulders"]] },
+  '2025-11-07':{ dur:'58m', ex:[["Shoulder Press",3,20,"shoulders"],["Crunch",3,0,"core"],["Seated Row",3,25,"back"],["Bulgarian Split Squat",3,20,"quad"],["Incline Chest Press",3,30,"chest"],["Lat Pulldown",3,40,"back"],["Hip Thrust",3,20,"glutes"]] },
+  '2025-11-10':{ dur:'1h 5m', ex:[["Goblet Squat (Kettlebell)",3,45,"quad"],["Romanian Deadlift",3,40,"hamstring"],["Seated Row",3,25,"back"],["Incline Chest Press",3,30,"chest"],["Lat Pulldown",3,55,"back"],["Bench Dip",3,0,"triceps"],["Hip Thrust",3,40,"glutes"]] },
+  '2025-11-13':{ dur:'1h 11m', ex:[["Incline Chest Press",3,30,"chest"],["Crunch",2,0,"core"],["Seated Row",3,40,"back"],["Seated Leg Curl",3,70,"hamstring"],["Lat Pulldown",3,55,"back"],["Push Up (Knees)",3,0,"chest"],["Lunge",3,30,"quad"]] },
+  '2025-11-17':{ dur:'54m', ex:[["Lunge",3,30,"quad"],["Bench Dip",3,0,"triceps"],["Seated Row",3,25,"back"],["Leg Extension",3,70,"quad"],["Lat Pulldown",3,55,"back"],["Lying Leg Curl",3,80,"hamstring"]] },
+  '2025-11-20':{ dur:'1h 1m', ex:[["Chest Dip",3,40,"other"],["Chest Press",3,30,"chest"],["Hanging Leg Raise",3,0,"core"],["Seated Row",3,40,"back"],["Lat Pulldown",3,55,"back"],["Leg Press",3,140,"quad"],["Lying Leg Curl",3,65,"hamstring"]] },
+  '2025-11-27':{ dur:'1h 11m', ex:[["Incline Chest Press",3,20,"chest"],["Seated Row",3,25,"back"],["Lunge",3,30,"quad"],["Lat Pulldown",3,55,"back"],["Bicep Curl",3,20,"biceps"],["Lying Leg Curl",3,80,"hamstring"],["Hip Thrust",3,44,"glutes"]] },
+  '2025-12-03':{ dur:'57m', ex:[["Chest Dip",3,40,"other"],["Chest Press",3,25,"chest"],["Hanging Leg Raise",3,0,"core"],["Seated Leg Curl",3,55,"hamstring"],["Lat Pulldown",3,55,"back"],["Leg Press",3,110,"quad"]] },
+  '2025-12-06':{ dur:'1h 10m', ex:[["Shoulder Press",3,10,"shoulders"],["Face Pull",3,50,"rear_delt"],["Romanian Deadlift",3,60,"hamstring"],["Bench Press",3,20,"chest"],["Bulgarian Split Squat",3,30,"quad"],["Lat Pulldown",3,55,"back"]] },
+  '2025-12-10':{ dur:'59m', ex:[["Shoulder Press",3,30,"shoulders"],["Crunch",3,0,"core"],["Seated Row",3,25,"back"],["Lunge",3,30,"quad"],["Incline Chest Press",3,30,"chest"],["Lat Pulldown",3,55,"back"],["Lying Leg Curl",3,80,"hamstring"]] },
+  '2025-12-14':{ dur:'1h 6m', ex:[["Goblet Squat (Kettlebell)",3,45,"quad"],["Romanian Deadlift",3,25,"hamstring"],["Bent Over One Arm Row",3,15,"back"],["Incline Chest Press",3,30,"chest"],["Shoulder Press",3,30,"shoulders"],["Triceps Extension",3,25,"triceps"],["Hip Thrust",3,44,"glutes"]] },
+  '2025-12-17':{ dur:'59m', ex:[["Chest Dip",3,40,"other"],["Decline Bench Press",3,20,"chest"],["Hack Squat",3,90,"quad"],["Seated Row",3,40,"back"],["Lat Pulldown",3,60,"back"],["Knee Raise",3,0,"core"],["Lying Leg Curl",3,80,"hamstring"]] },
+  '2025-12-20':{ dur:'1h 13m', ex:[["Chest Fly",3,20,"chest"],["Bent Over One Arm Row",3,20,"back"],["Arnold Press",3,30,"shoulders"],["Lat Pulldown",3,60,"back"],["Leg Press",3,140,"quad"],["Lying Leg Curl",3,80,"hamstring"],["Hip Thrust",3,90,"glutes"]] },
+  '2025-12-23':{ dur:'1h 5m', ex:[["Goblet Squat (Kettlebell)",3,45,"quad"],["Hip Abductor",3,100,"glutes"],["Chin Up",3,0,"back"],["Lying Leg Curl",3,70,"hamstring"],["Knee Raise",3,0,"core"],["Chest Press",3,25,"chest"],["Triceps Dip",3,0,"triceps"]] },
+  '2025-12-26':{ dur:'1h 15m', ex:[["Shoulder Press",3,30,"shoulders"],["Face Pull",3,30,"rear_delt"],["Seated Row",3,40,"back"],["Bulgarian Split Squat",3,40,"quad"],["Lat Pulldown",3,55,"back"],["Triceps Extension",3,25,"triceps"],["Lying Leg Curl",3,80,"hamstring"]] },
+  '2025-12-30':{ dur:'1h 12m', ex:[["Shoulder Press",3,20,"shoulders"],["Crunch",3,0,"core"],["Romanian Deadlift",3,60,"hamstring"],["Seated Row",3,40,"back"],["Lat Pulldown",3,55,"back"],["Lunge",3,40,"quad"],["Triceps Extension",3,10,"triceps"]] },
+  '2026-01-04':{ dur:'57m', ex:[["Bent Over One Arm Row",3,20,"back"],["Bench Dip",3,0,"triceps"],["Arnold Press",3,15,"shoulders"],["Lat Pulldown",3,60,"back"],["Leg Press",3,140,"quad"],["Hip Thrust",3,50,"glutes"]] },
+  '2026-01-07':{ dur:'47m', ex:[["Arnold Press",3,15,"shoulders"],["Lying Leg Curl",3,80,"hamstring"],["Lat Pulldown",3,55,"back"],["Goblet Squat (Kettlebell)",3,40,"quad"],["Bent Over One Arm Row",3,20,"back"]] },
+  '2026-01-09':{ dur:'59m', ex:[["Pull Up",3,0,"back"],["Chest Dip",3,0,"other"],["Bicep Curl",3,20,"biceps"],["Arnold Press",3,15,"shoulders"],["Knee Raise",3,0,"core"],["Leg Press",3,140,"quad"],["Lying Leg Curl",3,65,"hamstring"]] },
+  '2026-01-12':{ dur:'1h 2m', ex:[["Triceps Extension",3,25,"triceps"],["Face Pull",3,30,"rear_delt"],["Seated Row",3,40,"back"],["Bulgarian Split Squat",3,40,"quad"],["Seated Leg Curl",3,80,"hamstring"],["Lat Pulldown",3,55,"back"]] },
+  '2026-01-15':{ dur:'1h 12m', ex:[["Seated Overhead Press",3,40,"shoulders"],["Squat",3,50,"quad"],["Bent Over One Arm Row",3,20,"back"],["Lat Pulldown",3,50,"back"],["Incline Bench Press",3,18,"chest"],["Lying Leg Curl",3,65,"hamstring"]] },
+  '2026-01-22':{ dur:'1h 7m', ex:[["Face Pull",3,30,"rear_delt"],["Glute Kickback",3,25,"glutes"],["Bench Dip",3,0,"triceps"],["Bulgarian Split Squat",3,30,"quad"],["Seated Leg Curl",3,80,"hamstring"],["Lat Pulldown",3,55,"back"],["Lateral Raise",3,10,"shoulders"]] },
+  '2026-01-26':{ dur:'1h 10m', ex:[["Incline Chest Press",3,30,"chest"],["Face Pull",3,30,"rear_delt"],["Glute Kickback",3,40,"glutes"],["Seated Leg Curl",3,80,"hamstring"],["Lat Pulldown",3,55,"back"],["Pull Up",3,0,"back"],["Lunge",3,30,"quad"]] },
+  '2026-01-29':{ dur:'1h 25m', ex:[["Bench Press",3,40,"chest"],["Bent Over One Arm Row",3,20,"back"],["Triceps Pushdown (Cable - Straight Bar)",3,20,"triceps"],["Glute Kickback",3,30,"glutes"],["Lat Pulldown",3,60,"back"],["Incline Bench Press",3,40,"chest"],["Leg Press",3,140,"quad"],["Lying Leg Curl",3,80,"hamstring"]] },
+  '2026-02-03':{ dur:'1h 14m', ex:[["Incline Chest Press",3,40,"chest"],["Romanian Deadlift",3,60,"hamstring"],["Bent Over One Arm Row",3,20,"back"],["Bench Dip",3,0,"triceps"],["Glute Kickback",3,30,"glutes"],["Lat Pulldown",3,55,"back"],["Lunge",3,40,"quad"]] },
+  '2026-02-08':{ dur:'1h 9m', ex:[["Bench Press",3,40,"chest"],["Romanian Deadlift",3,25,"hamstring"],["Bent Over One Arm Row",3,20,"back"],["Bench Dip",3,0,"triceps"],["Bulgarian Split Squat",3,40,"quad"],["Lat Pulldown",3,55,"back"]] },
+  '2026-02-11':{ dur:'1h 12m', ex:[["Bench Press",3,40,"chest"],["Romanian Deadlift",3,60,"hamstring"],["Bent Over One Arm Row",3,20,"back"],["Bulgarian Split Squat",3,40,"quad"],["Glute Kickback",3,15,"glutes"],["Lat Pulldown",3,55,"back"],["Incline Bench Press",3,40,"chest"]] },
+  '2026-02-14':{ dur:'1h 26m', ex:[["Chest Dip",3,40,"other"],["Incline Chest Press",3,50,"chest"],["Hip Abductor",3,190,"glutes"],["Seated Row",3,13,"back"],["Lateral Raise",3,10,"shoulders"],["Lat Pulldown",3,23,"back"],["Leg Press",3,140,"quad"],["Lying Leg Curl",3,65,"hamstring"]] },
+  '2026-02-17':{ dur:'1h 19m', ex:[["Bench Press",3,40,"chest"],["Chest Dip",3,0,"other"],["Bent Over One Arm Row",3,20,"back"],["Chin Up",3,0,"back"],["Squat",3,50,"quad"],["Glute Ham Raise",2,70,"glutes"],["Lying Leg Curl",3,65,"hamstring"]] },
+  '2026-02-27':{ dur:'1h 4m', ex:[["Bench Press",3,40,"chest"],["Bent Over One Arm Row",3,20,"back"],["Seated Leg Curl",3,80,"hamstring"],["Lat Pulldown",3,55,"back"],["Incline Bench Press",3,40,"chest"],["Lunge",3,40,"quad"]] },
+  '2026-03-02':{ dur:'1h 12m', ex:[["Bench Press",3,40,"chest"],["Bent Over One Arm Row",3,20,"back"],["Decline Bench Press",3,40,"chest"],["Lateral Raise",3,20,"shoulders"],["Lat Pulldown",3,60,"back"],["Leg Press",3,140,"quad"],["Hip Thrust",3,50,"glutes"]] },
+  '2026-03-05':{ dur:'1h 11m', ex:[["Bench Press",3,40,"chest"],["Seated Row",3,40,"back"],["Seated Leg Curl",3,90,"hamstring"],["Lat Pulldown",3,55,"back"],["Incline Chest Fly",3,20,"chest"],["Lunge",3,40,"quad"]] },
+  '2026-03-13':{ dur:'1h 18m', ex:[["Bench Press",3,40,"chest"],["Bent Over One Arm Row",3,20,"back"],["Bench Dip",3,0,"triceps"],["Seated Leg Curl",3,80,"hamstring"],["Reverse Fly",3,10,"chest"],["Lunge",3,40,"quad"]] },
+  '2026-03-16':{ dur:'46m', ex:[["Seated Row",3,40,"back"],["Lat Pulldown",3,55,"back"],["Triceps Pushdown (Cable - Straight Bar)",3,30,"triceps"],["Bench Press",3,40,"chest"],["Lateral Raise",3,20,"shoulders"]] },
+  '2026-03-21':{ dur:'32m', ex:[["Lunge",3,40,"quad"],["Seated Leg Curl",3,80,"hamstring"],["Hip Thrust",3,50,"glutes"]] },
+  '2026-03-22':{ dur:'53m', ex:[["Bench Press",3,40,"chest"],["Bench Dip",3,0,"triceps"],["Chin Up",3,0,"back"],["Seated Row",3,40,"back"],["Bicep Curl",3,30,"biceps"],["Triceps Pushdown (Cable - Straight Bar)",3,30,"triceps"]] },
+  '2026-03-26':{ dur:'49m', ex:[["Bench Press",3,40,"chest"],["Chin Up",3,0,"back"],["Seated Leg Curl",3,80,"hamstring"],["Bulgarian Split Squat",3,40,"quad"],["Glute Kickback",3,20,"glutes"]] },
+  '2026-03-30':{ dur:'1h 2m', ex:[["Bench Press",3,40,"chest"],["Bent Over One Arm Row",3,20,"back"],["Seated Leg Curl",3,80,"hamstring"],["Incline Bench Press",3,40,"chest"],["Lunge",3,40,"quad"],["Hip Thrust",3,40,"glutes"]] },
+  '2026-04-02':{ dur:'1h 7m', ex:[["Bench Press",3,40,"chest"],["Bench Dip",3,0,"triceps"],["Bulgarian Split Squat",3,30,"quad"],["Seated Leg Curl",3,80,"hamstring"],["Seated Row",3,40,"back"],["Lat Pulldown",3,55,"back"],["Lateral Raise",3,10,"shoulders"]] },
+  '2026-04-08':{ dur:'1h 17m', ex:[["Lunge",3,40,"quad"],["Bench Press",3,40,"chest"],["Glute Kickback",3,25,"glutes"],["Seated Row",3,40,"back"],["Lateral Raise",3,10,"shoulders"],["Lat Pulldown",3,55,"back"],["Incline Bench Press",3,40,"chest"],["Lying Leg Curl",3,65,"hamstring"]] },
+  '2026-04-13':{ dur:'59m', ex:[["Bench Press",3,40,"chest"],["Bent Over One Arm Row",3,20,"back"],["Bench Dip",3,0,"triceps"],["Seated Leg Curl",3,80,"hamstring"],["Lat Pulldown",3,55,"back"],["Lunge",3,40,"quad"]] },
+  '2026-04-17':{ dur:'1h 12m', ex:[["Bicep Curl",3,20,"biceps"],["Bent Over One Arm Row",3,20,"back"],["Bulgarian Split Squat",3,40,"quad"],["Seated Leg Curl",3,80,"hamstring"],["Lat Pulldown",3,55,"back"],["Incline Bench Press",3,40,"chest"],["Push Up",3,0,"chest"]] },
+  '2026-04-22':{ dur:'1h 12m', ex:[["Glute Kickback",3,30,"glutes"],["Seated Row",2,40,"back"],["Seated Leg Curl",3,80,"hamstring"],["Lat Pulldown",3,55,"back"],["Incline Bench Press",3,40,"chest"],["Push Up",3,0,"chest"],["Lunge",3,40,"quad"]] },
+  '2026-04-24':{ dur:'1h 14m', ex:[["Face Pull",3,15,"rear_delt"],["Bent Over One Arm Row",3,20,"back"],["Lateral Raise",3,10,"shoulders"],["Lat Pulldown",3,55,"back"],["Incline Bench Press",3,40,"chest"],["Leg Press",3,140,"quad"],["Hip Thrust",3,50,"glutes"]] },
+  '2026-04-28':{ dur:'1h 12m', ex:[["Bench Press",3,40,"chest"],["Romanian Deadlift",3,80,"hamstring"],["Bench Dip",3,0,"triceps"],["Seated Row",3,40,"back"],["Lat Pulldown",3,55,"back"],["Lunge",3,40,"quad"],["Hip Thrust",3,50,"glutes"]] },
+  '2026-05-05':{ dur:'1h 20m', ex:[["Bench Press",3,40,"chest"],["Face Pull",3,18,"rear_delt"],["Bent Over One Arm Row",3,20,"back"],["Squat",3,50,"quad"],["Lat Pulldown",3,70,"back"],["Incline Bench Press",3,40,"chest"],["Romanian Deadlift",3,70,"hamstring"]] },
+  '2026-05-08':{ dur:'1h 7m', ex:[["Plank",3,0,"core"],["Bench Press",3,40,"chest"],["Face Pull",3,30,"rear_delt"],["Lateral Raise",3,10,"shoulders"],["Seated Leg Curl",3,80,"hamstring"],["Lat Pulldown",3,55,"back"],["Lunge",3,40,"quad"]] },
+  '2026-05-15':{ dur:'1h 5m', ex:[["Bench Press",3,40,"chest"],["Romanian Deadlift",3,60,"hamstring"],["Bent Over One Arm Row",3,20,"back"],["Bulgarian Split Squat",3,40,"quad"],["Lat Pulldown",3,55,"back"],["Incline Bench Press",3,40,"chest"]] },
+  '2026-05-17':{ dur:'1h 2m', ex:[["Plank",2,0,"core"],["Face Pull",3,30,"rear_delt"],["Bulgarian Split Squat",3,30,"quad"],["Lateral Raise",3,10,"shoulders"],["Lat Pulldown",3,55,"back"],["Incline Bench Press",3,40,"chest"],["Hip Thrust",3,50,"glutes"]] },
+  '2026-05-19':{ dur:'1h 10m', ex:[["Plank",2,0,"core"],["Bent Over One Arm Row",3,20,"back"],["Bulgarian Split Squat",3,30,"quad"],["Seated Leg Curl",3,80,"hamstring"],["Lateral Raise",2,10,"shoulders"],["Lat Pulldown",3,55,"back"],["Incline Bench Press",3,40,"chest"],["Hip Thrust",3,50,"glutes"]] },
+  '2026-05-21':{ dur:'1h 17m', ex:[["Face Pull",3,15,"rear_delt"],["Bent Over One Arm Row",3,22,"back"],["Romanian Deadlift",3,70,"hamstring"],["Lat Pulldown",3,60,"back"],["Incline Bench Press",3,45,"chest"],["Leg Press",3,140,"quad"],["Hip Thrust",3,50,"glutes"]] },
+};
+
+const leraMonthlyMG = {
+  '2025-09':{ ses:1, chest:3, back:6, quad:3, hamstring:3, glutes:3, shoulders:3, rear_delt:0, biceps:0, triceps:3, core:3 },
+  '2025-10':{ ses:7, chest:21, back:42, quad:21, hamstring:15, glutes:18, shoulders:12, rear_delt:0, biceps:0, triceps:9, core:15 },
+  '2025-11':{ ses:7, chest:21, back:42, quad:24, hamstring:18, glutes:9, shoulders:6, rear_delt:0, biceps:3, triceps:6, core:10 },
+  '2025-12':{ ses:9, chest:21, back:42, quad:27, hamstring:27, glutes:9, shoulders:18, rear_delt:6, biceps:0, triceps:12, core:15 },
+  '2026-01':{ ses:8, chest:12, back:42, quad:24, hamstring:21, glutes:12, shoulders:15, rear_delt:9, biceps:3, triceps:12, core:3 },
+  '2026-02':{ ses:6, chest:24, back:36, quad:18, hamstring:18, glutes:11, shoulders:3, rear_delt:0, biceps:0, triceps:6, core:0 },
+  '2026-03':{ ses:8, chest:33, back:33, quad:18, hamstring:15, glutes:12, shoulders:6, rear_delt:0, biceps:3, triceps:12, core:0 },
+  '2026-04':{ ses:7, chest:30, back:41, quad:21, hamstring:18, glutes:12, shoulders:9, rear_delt:3, biceps:3, triceps:9, core:0 },
+  '2026-05':{ ses:6, chest:24, back:30, quad:18, hamstring:15, glutes:9, shoulders:8, rear_delt:12, biceps:0, triceps:0, core:7 },
+};
+
+const leraCalMonths = [[2025,8],[2025,9],[2025,10],[2025,11],[2026,0],[2026,1],[2026,2],[2026,3],[2026,4]];
+const leraMgTargets = { chest:15, back:15, quad:9, hamstring:9, glutes:9, shoulders:6, rear_delt:6, biceps:6, triceps:6 };
+const leraMgColor = { chest:'#e879f9', back:'#60a5fa', quad:'#34d399', hamstring:'#2dd4bf', glutes:'#f0a0ff', rear_delt:'#f97316', shoulders:'#fb923c', biceps:'#a3e635', triceps:'#86efac', core:'#64748b', other:'#374151' };
+const leraMgLabel = { chest:'Грудь', back:'Спина', quad:'Квадр', hamstring:'Б.бедра', glutes:'Ягодицы', rear_delt:'Задн.Δ', shoulders:'ОХП', biceps:'Бицепс', triceps:'Трицепс' };
+
+// ══════════════════════════════════════════════════════════
+// SHARED UTILITIES
+// ══════════════════════════════════════════════════════════
+const MONTHS_RU = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+const WDAYS_SHORT = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+const dayNames = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+function calDow(y,m){ const d=new Date(y,m,1).getDay(); return d===0?6:d-1; }
+function pad2(n){ return String(n).padStart(2,'0'); }
+
+const tip = document.getElementById('tip');
+
+function positionTip(e) {
+  const x=e.clientX+14, y=e.clientY-10, tw=280, th=tip.offsetHeight||180;
+  tip.style.left=(x+tw>window.innerWidth?x-tw-28:x)+'px';
+  tip.style.top=(y+th>window.innerHeight?y-th:y)+'px';
+}
+
+let activeSessions = alexSessions;
+document.addEventListener('mouseover', e => {
+  const cell = e.target.closest('[data-date]');
+  if (!cell) { tip.style.display='none'; return; }
+  const date = cell.dataset.date;
+  const s = activeSessions[date];
+  if (!s) return;
+  const dn = dayNames[new Date(date+'T12:00:00').getDay()];
+  let html = `<div class="tip-date">${dn}, ${date}</div>`;
+  html += `<div class="tip-dur">${s.dur}</div><div class="tip-sep"></div>`;
+  s.ex.forEach(([name,sets,maxW,mg]) => {
+    const col = (activeSessions===alexSessions?alexMgColor:leraMgColor)[mg]||'#666';
+    const w = maxW>0?`${maxW} кг`:'BW';
+    html += `<div class="ex-line"><span class="ex-name"><span class="mg-dot" style="background:${col}"></span>${name}</span><span class="ex-info">${sets}× · ${w}</span></div>`;
+  });
+  tip.innerHTML=html; tip.style.display='block';
+  positionTip(e);
+});
+document.addEventListener('mousemove', e => { if(tip.style.display==='block') positionTip(e); });
+document.addEventListener('mouseout', e => { if(e.target.closest('[data-date]')&&!e.relatedTarget?.closest('[data-date]')) tip.style.display='none'; });
+
+function buildCalendar(containerId, sessions, monthlyMG, calMonths, mgTargets, mgColor, mgLabel, peakMonth) {
+  const gymSet = new Set(Object.keys(sessions));
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
+  calMonths.forEach(([y,m]) => {
+    const moKey = `${y}-${pad2(m+1)}`;
+    const mgData = monthlyMG[moKey]||{};
+    const daysInMonth = new Date(y,m+1,0).getDate();
+    const firstDow = calDow(y,m);
+    const isPeak = moKey === peakMonth;
+    const block = document.createElement('div'); block.className='month-block';
+    const hdr = document.createElement('div'); hdr.className='month-header';
+    hdr.innerHTML=`<span class="month-name">${MONTHS_RU[m]} ${y}</span><span class="month-ses">${mgData.ses||0} сил.</span>${isPeak?'<span class="month-peak">★</span>':''}`;
+    block.appendChild(hdr);
+    const mgRow = document.createElement('div'); mgRow.className='mg-row';
+    Object.entries(mgTargets).forEach(([mg,target]) => {
+      const val=mgData[mg]||0;
+      const cls=!val?'mg-miss':val>=target?'mg-ok':'mg-low';
+      mgRow.innerHTML+=`<span class="mg-badge ${cls}" title="${mgLabel[mg]||mg}: ${val} сет (цель ${target}+)">${mgLabel[mg]||mg} ${val||'—'}</span>`;
+    });
+    block.appendChild(mgRow);
+    const monthDates=[];
+    for(let d=1;d<=daysInMonth;d++){const ds=`${y}-${pad2(m+1)}-${pad2(d)}`;if(gymSet.has(ds))monthDates.push(ds);}
+    if(monthDates.length>=2){
+      const ms2=monthDates.map(d=>new Date(d+'T12:00:00').getTime()).sort((a,b)=>a-b);
+      const gaps=[];for(let i=1;i<ms2.length;i++)gaps.push((ms2[i]-ms2[i-1])/86400000);
+      const avg=(gaps.reduce((a,b)=>a+b,0)/gaps.length).toFixed(1);
+      const max=Math.round(Math.max(...gaps));
+      const ac=avg<2?'#4ade80':avg<=4?'#fbbf24':'#f97316';
+      const mc=max>10?'#ef4444':max>6?'#f97316':'#555';
+      const rec=document.createElement('div');rec.className='recovery';
+      rec.innerHTML=`Ср. <span style="color:${ac}">${avg}д</span> · макс <span style="color:${mc}">${max}д</span>`;
+      block.appendChild(rec);
+    }
+    const head=document.createElement('div');head.className='cal-head';
+    WDAYS_SHORT.forEach(d=>{const s=document.createElement('span');s.textContent=d;head.appendChild(s);});
+    block.appendChild(head);
+    const grid=document.createElement('div');grid.className='cal-grid';
+    for(let i=0;i<firstDow;i++){const e=document.createElement('div');e.className='day d-empty';grid.appendChild(e);}
+    for(let d=1;d<=daysInMonth;d++){
+      const ds=`${y}-${pad2(m+1)}-${pad2(d)}`;
+      const isGym=gymSet.has(ds);
+      const cell=document.createElement('div');
+      cell.className='day '+(isGym?'d-gym':'d-rest');
+      cell.textContent=d;
+      if(isGym) cell.dataset.date=ds;
+      grid.appendChild(cell);
+    }
+    block.appendChild(grid);
+    container.appendChild(block);
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+// PERSON SWITCHER
+// ══════════════════════════════════════════════════════════
+function switchPerson(person) {
+  document.getElementById('alex-view').style.display = person==='alex'?'':'none';
+  document.getElementById('lera-view').style.display = person==='lera'?'':'none';
+  document.getElementById('btn-alex').classList.toggle('active', person==='alex');
+  document.getElementById('btn-lera').classList.toggle('active', person==='lera');
+  activeSessions = person==='alex' ? alexSessions : leraSessions;
+  localStorage.setItem('fitPerson', person);
+}
+
+// Init
+buildCalendar('alex-calendar', alexSessions, alexMonthlyMG, alexCalMonths, alexMgTargets, alexMgColor, alexMgLabel, '2025-12');
+buildCalendar('lera-calendar', leraSessions, leraMonthlyMG, leraCalMonths, leraMgTargets, leraMgColor, leraMgLabel, '2025-12');
+
+const saved = localStorage.getItem('fitPerson') || 'alex';
+switchPerson(saved);
+</script>
+</body>
+</html>

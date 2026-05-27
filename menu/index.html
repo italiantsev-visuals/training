@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Меню">
+<link rel="manifest" href="manifest.json">
+<title>Меню на 2 недели — Алекс и Лера</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#111;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:18px;max-width:1000px}
+h1{font-size:16px;color:#fff;margin-bottom:4px}
+.sub{font-size:11px;color:#444;margin-bottom:16px}
+
+/* targets bar */
+.targets{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.tcard{background:#1a1a1a;border-radius:8px;padding:10px 14px;font-size:11px;color:#888;line-height:1.7}
+.tcard strong{color:#fff;font-size:13px}
+.alex-c{border-left:3px solid #60a5fa}
+.lera-c{border-left:3px solid #f0a0ff}
+
+/* week tabs */
+.week-tabs{display:flex;gap:6px;margin-bottom:12px}
+.wtab{background:#1a1a1a;border:none;color:#555;padding:6px 18px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600}
+.wtab.active{background:#5b21b6;color:#fff}
+
+/* day selector */
+.day-sel{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
+.dbtn{background:#1a1a1a;border:none;color:#666;padding:5px 10px;border-radius:5px;cursor:pointer;font-size:11px;font-weight:600;min-width:54px}
+.dbtn.active{background:#7c3aed;color:#fff}
+.dbtn:hover{background:#2a2a2a}
+
+/* meal cards */
+.meals{display:flex;flex-direction:column;gap:10px}
+.mcard{background:#1a1a1a;border-radius:10px;overflow:hidden}
+.mcard-head{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid #222}
+.mcard-icon{font-size:13px}
+.mcard-title{font-size:12px;font-weight:700;color:#fff;flex:1}
+.mcard-howto{font-size:10px;color:#444;margin-top:1px}
+.mcard-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.person-col{padding:10px 14px}
+.person-col+.person-col{border-left:1px solid #222}
+.pname{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px}
+.pname.alex{color:#60a5fa}
+.pname.lera{color:#f0a0ff}
+.item-list{font-size:10px;color:#777;line-height:1.7;margin-bottom:6px}
+.macros{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.kcal{font-size:12px;font-weight:700;color:#fff}
+.mac{font-size:10px;padding:1px 5px;border-radius:3px;font-weight:600}
+.mb{background:#1e3a5f;color:#60a5fa}
+.mf{background:#3a2a0a;color:#fbbf24}
+.mc{background:#1e3a1e;color:#4ade80}
+
+/* fixed evening */
+.eve-card{background:#1c1830;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:14px}
+.eve-icon{font-size:20px}
+.eve-body{flex:1}
+.eve-title{font-size:12px;font-weight:700;color:#a855f7;margin-bottom:3px}
+.eve-desc{font-size:10px;color:#666;margin-bottom:5px}
+.eve-mac{display:flex;gap:6px}
+
+/* daily summary */
+.day-sum{background:#181818;border-radius:10px;padding:12px 14px;margin-top:10px}
+.sum-title{font-size:10px;color:#333;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.sum-row{display:flex;gap:16px;align-items:center;margin-bottom:5px}
+.sum-name{font-size:11px;font-weight:700;width:44px}
+.sum-name.alex{color:#60a5fa}
+.sum-name.lera{color:#f0a0ff}
+.bar-wrap{flex:1;height:6px;background:#222;border-radius:3px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:3px}
+.sum-num{font-size:11px;color:#bbb;white-space:nowrap;min-width:80px;text-align:right}
+.sum-target{font-size:9px;color:#333;text-align:right;min-width:80px}
+
+/* shopping link */
+.shop-section{margin-top:20px;background:#1a1a1a;border-radius:10px;padding:14px}
+.shop-title{font-size:12px;font-weight:700;color:#fff;margin-bottom:10px;cursor:pointer}
+.shop-body{font-size:11px;color:#888;line-height:1.8;display:none;columns:2;gap:20px}
+.shop-body.open{display:block}
+.shop-body h4{color:#bbb;font-size:11px;margin-top:8px;margin-bottom:2px;break-inside:avoid}
+.tip-box{background:#1a1a1a;border-radius:10px;padding:14px;margin-top:10px;font-size:11px;color:#666;line-height:1.8}
+.tip-box strong{color:#aaa}
+
+/* macro summary */
+.macro-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.mperson{background:#151515;border-radius:7px;padding:9px 12px}
+.mperson-name{font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:7px}
+.mperson-name.alex{color:#60a5fa}.mperson-name.lera{color:#f0a0ff}
+.mbar-row{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.mbar-label{font-size:9px;color:#444;width:22px;flex-shrink:0}
+.mbar-track{flex:1;height:4px;background:#222;border-radius:2px;overflow:hidden}
+.mbar-fill{height:100%;border-radius:2px}
+.mbar-val{font-size:9px;color:#666;white-space:nowrap;min-width:86px;text-align:right}
+</style>
+</head>
+<body>
+
+<div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+  <span style="font-size:11px;color:#444;align-self:center;font-weight:600">МЕНЮ</span>
+  <a href="dashboard.html" style="font-size:11px;background:#1a1a1a;color:#60a5fa;padding:4px 12px;border-radius:5px;text-decoration:none;font-weight:600">💙 Алекс</a>
+  <a href="#" style="font-size:11px;background:#1a1a1a;color:#f0a0ff;padding:4px 12px;border-radius:5px;text-decoration:none;font-weight:600;opacity:.5" title="Скоро — дашборд Леры">💜 Лера</a>
+</div>
+
+<h1>🥗 Меню на 2 недели</h1>
+<div class="sub">Алекс + Лера · одинаковые блюда, разные порции · вечерний перекус фиксирован каждый день</div>
+
+<div class="targets">
+  <div class="tcard alex-c"><strong>Алекс</strong> · 83кг, 34г<br>Цель: <strong>2470</strong> ккал/день &nbsp;·&nbsp; Б <strong>166г</strong> &nbsp;·&nbsp; Ж <strong>70г</strong> &nbsp;·&nbsp; У <strong>295г</strong></div>
+  <div class="tcard lera-c"><strong>Лера</strong> · 55кг, 31г<br>Цель: <strong>1665</strong> ккал/день &nbsp;·&nbsp; Б <strong>110г</strong> &nbsp;·&nbsp; Ж <strong>45г</strong> &nbsp;·&nbsp; У <strong>205г</strong></div>
+</div>
+
+<div class="week-tabs">
+  <button class="wtab active" onclick="switchWeek(1)">Неделя 1</button>
+  <button class="wtab" onclick="switchWeek(2)">Неделя 2</button>
+</div>
+
+<div class="day-sel" id="daysel"></div>
+<div id="content"></div>
+
+<div class="shop-section">
+  <div class="shop-title" onclick="toggleShop()">📋 Список покупок на неделю (на двоих) ▸</div>
+  <div class="shop-body" id="shopbody">
+    <h4>Белки</h4>
+    Куриная грудка — 1.5 кг<br>Куриные бёдра б/к — 1 кг<br>Говядина (стейки/куски) — 1 кг<br>Говяжий фарш 10% — 1 кг<br>Яйца — 30 шт<br>Лосось (филе/стейки) — 1.5 кг<br>Тунец конс. — 4–5 банок<br>Растительный протеин (порошок) — по потребности
+    <h4>Молочное</h4>
+    Skyr 0% (Siggi's) / Cottage cheese 1% / Greek yogurt 0% — 2 кг суммарно<br>Греческий йогурт 2% — 1 кг<br>Молоко 2.5% — 2 л<br>Сыр твёрдый — 200г<br>Skyr/Epica протеиновый — 14 шт × 150г (вечерний перекус)
+    <h4>Крупы и бобовые</h4>
+    Гречка — 200г (1 блюдо за 2 нед.)<br>Овсянка — 800г<br>Рис — 800г<br>Киноа — 400г<br>Перловка — 300г<br>Макароны ц/з — 500г<br>Нут вар./конс. — 3 банки<br>Чечевица — 500г
+    <h4>Овощи и фрукты</h4>
+    Бананы, яблоки, лимоны<br>Помидоры, огурцы<br>Стручковая фасоль (зам.) — 500г<br>Кабачки, капуста, шпинат<br>Морковь, лук, болгарский перец<br>Авокадо — 2–3 шт<br>Ягоды замороженные — 1 кг
+    <h4>Жиры</h4>
+    Масло оливковое — 300 мл<br>Арахисовая паста — 200г<br>Грецкие / кедровые орехи — 300г
+    <h4>Вечерний перекус (каждый день)</h4>
+    Протеиновые батончики — 14 шт (~200 ккал)<br>Skyr/Epica протеин 150г — 14 шт
+  </div>
+</div>
+
+<div class="tip-box">
+  <strong>Советы:</strong> В тренировочные дни добавляйте 50–70г углеводов к ужину (рис/киноа/картофель). В дни отдыха придерживайтесь плана. Крупы взвешивайте <em>в сухом виде</em>: рис ×3, киноа ×2.8, перловка ×2.7 (коэффициент разварки). Если вечером не хочется батончик — можно заменить на 100г Skyr + 1 ст.л. мёда (~аналог по белку). Лосось можно брать любой — стейки, филе, слабосолёный.<br><br><strong>Skyr 0%, Cottage cheese 1–2% и Greek yogurt 0% взаимозаменяемы</strong> — одинаковые порции, почти идентичные КБЖУ. Берите что есть в магазине.
+</div>
+
+<script>
+const ALEX_T = {kcal:2470, p:166, f:70, c:295};
+const LERA_T = {kcal:1665, p:110, f:45, c:205};
+const EVE = {kcal:350, p:30, f:9, c:25};
+const DAYS_W1 = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+const DAYS_W2 = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+
+const menu = [
+// ── НЕДЕЛЯ 1 ──
+{d:'Понедельник',
+ br:{title:'Овсяная каша с бананом и ореховой пастой',howto:'Варить на молоке 5-7 мин, добавить нарезанный банан и арахисовую пасту.',
+   a:{i:['Овсянка 100г','Молоко 2.5% 200мл','Банан 100г','Арахисовая паста 20г'],k:680,p:22,f:21,c:97},
+   l:{i:['Овсянка 65г','Молоко 150мл','Банан 80г','Арахисовая паста 10г'],k:447,p:14,f:13,c:63}},
+ sn:{title:'Skyr с яблоком',howto:'Смешать skyr с нарезанным яблоком и мёдом.',
+   a:{i:['Skyr 0% (Siggi\'s) 250г','Яблоко 150г','Мёд 10г'],k:290,p:30,f:1,c:40},
+   l:{i:['Skyr 0% 150г','Яблоко 120г'],k:175,p:19,f:0,c:26}},
+ di:{title:'Куриная грудка с гречкой и стручковой фасолью',howto:'Гречку варить 20 мин. Грудку запечь 180°С 25 мин. Стручковую фасоль тушить 5 мин с соевым соусом.',
+   a:{i:['Гречка 250г(вар)','Куриная грудка 200г','Стручковая фасоль 150г','Масло оливковое 10г'],k:745,p:70,f:15,c:62},
+   l:{i:['Гречка 180г(вар)','Куриная грудка 130г','Стручковая фасоль 120г','Масло оливковое 7г'],k:510,p:46,f:10,c:42}},
+ ak:2065,ap:152,af:46,ac:224, lk:1482,lp:109,lf:32,lc:156},
+
+{d:'Вторник',
+ br:{title:'Яичница с помидорами и цельнозерновым хлебом',howto:'Обжарить помидор 2 мин, вбить яйца, накрыть крышкой. Подавать с хлебом и сыром.',
+   a:{i:['Яйца 3шт','Помидор 150г','Масло 10г','Хлеб ц/з 60г','Сыр 30г'],k:653,p:35,f:38,c:35},
+   l:{i:['Яйца 2шт','Помидор 120г','Масло 7г','Хлеб ц/з 40г'],k:369,p:19,f:20,c:20}},
+ sn:{title:'Греческий йогурт с орехами',howto:'Смешать йогурт с орехами и мёдом.',
+   a:{i:['Греческий йогурт 300г','Грецкие орехи 30г','Мёд 15г'],k:400,p:22,f:22,c:37},
+   l:{i:['Греческий йогурт 200г','Грецкие орехи 15г'],k:204,p:13,f:10,c:12}},
+ di:{title:'Запечённый лосось с рисом и кабачком',howto:'Стейк или филе лосося запечь 200°С 15-18 мин с лимонным соком. Рис отварить. Кабачок тушить 8 мин с маслом.',
+   a:{i:['Лосось (стейк/филе) 200г','Рис варёный 200г','Кабачок 150г','Масло оливковое 10г'],k:825,p:58,f:31,c:62},
+   l:{i:['Лосось 130г','Рис варёный 140г','Кабачок 120г','Масло оливковое 5г'],k:537,p:37,f:20,c:44}},
+ ak:2228,ap:145,af:100,ac:159, lk:1460,lp:99,lf:59,lc:101},
+
+{d:'Среда',
+ br:{title:'Сырники на skyr (Skyr pancakes)',howto:'Skyr, яйцо и муку смешать до однородности. Жарить на антипригарной сковороде по 3-4 мин с каждой стороны. Подавать со сметаной.',
+   a:{i:['Skyr 0% 300г','Яйцо 1шт','Овсяная мука 40г','Масло 10г','Сметана 30г'],k:620,p:46,f:26,c:58},
+   l:{i:['Skyr 0% 200г','Яйцо 1шт','Овсяная мука 25г','Масло 5г'],k:387,p:31,f:8,c:38}},
+ sn:{title:'Варёные яйца с огурцом',howto:'Яйца сварить вкрутую (10 мин). Подавать с нарезанным огурцом и хлебом.',
+   a:{i:['Яйца 3шт','Огурец 200г','Хлеб ц/з 40г'],k:408,p:26,f:21,c:22},
+   l:{i:['Яйца 2шт','Огурец 150г'],k:209,p:16,f:14,c:5}},
+ di:{title:'Говяжьи котлеты с рисом и тушёной капустой',howto:'Котлеты с луком и морковью запечь 180°С 25 мин. Капусту тушить с маслом 15 мин. Рис отварить.',
+   a:{i:['Говяжий фарш 10% 250г','Рис варёный 200г','Капуста тушёная 200г','Масло 7г'],k:820,p:58,f:29,c:72},
+   l:{i:['Говяжий фарш 160г','Рис варёный 140г','Капуста тушёная 150г','Масло 5г'],k:538,p:37,f:18,c:48}},
+ ak:2198,ap:160,af:85,ac:177, lk:1484,lp:114,lf:49,lc:116},
+
+{d:'Четверг',
+ br:{title:'Рисовая каша с молоком и яйцом',howto:'Рис отварить до мягкости, залить тёплым молоком, добавить масло. Яйцо сварить вкрутую (10 мин).',
+   a:{i:['Рис варёный 250г','Молоко 2.5% 150мл','Яйцо 1шт','Масло сливочное 10г'],k:540,p:19,f:18,c:66},
+   l:{i:['Рис варёный 170г','Молоко 100мл','Яйцо 1шт'],k:346,p:12,f:7,c:45}},
+ sn:{title:'Протеиновый коктейль с бананом',howto:'Взбить в блендере. Без блендера — протеин + молоко в шейкере, банан отдельно.',
+   a:{i:['Протеин (1 скуп ~30г)','Молоко 2.5% 300мл','Банан 100г'],k:435,p:46,f:8,c:47},
+   l:{i:['Протеин (~20г)','Молоко 200мл','Банан 70г'],k:277,p:31,f:5,c:31}},
+ di:{title:'Стейк лосося запечённый с картофелем и помидорами',howto:'Картофель кружками на противень, сверху стейк лосося и помидоры. Сбрызнуть маслом. Запечь 200°С 25-30 мин.',
+   a:{i:['Стейк лосося 200г','Картофель 250г','Помидоры 150г','Масло оливковое 15г'],k:790,p:46,f:41,c:54},
+   l:{i:['Стейк лосося 130г','Картофель 170г','Помидоры 100г','Масло оливковое 10г'],k:525,p:30,f:28,c:37}},
+ ak:2115,ap:141,af:76,ac:192, lk:1498,lp:103,lf:49,lc:138},
+
+{d:'Пятница',
+ br:{title:'Омлет с овощами и сыром',howto:'Шпинат обжарить 2 мин, залить взбитыми с молоком яйцами. Посыпать сыром, накрыть крышкой на 5-7 мин.',
+   a:{i:['Яйца 3шт','Молоко 100мл','Шпинат 80г','Сыр твёрдый 40г','Масло 8г','Помидор 100г'],k:586,p:40,f:39,c:15},
+   l:{i:['Яйца 2шт','Молоко 50мл','Шпинат 60г','Сыр твёрдый 20г','Масло 5г'],k:344,p:24,f:22,c:7}},
+ sn:{title:'Куриная грудка с огурцом и хлебом',howto:'Курицу отварить заранее. Нарезать, подавать с огурцом и горчицей на хлебе.',
+   a:{i:['Куриная грудка варёная 180г','Огурец 150г','Хлеб ц/з 60г','Горчица 10г'],k:485,p:63,f:7,c:32},
+   l:{i:['Куриная грудка варёная 100г','Огурец 100г','Хлеб ц/з 40г'],k:279,p:36,f:4,c:21}},
+ di:{title:'Чечевичный суп с говядиной',howto:'Лук и морковь обжарить, добавить говядину и томатную пасту. Залить водой, добавить чечевицу. Варить 30 мин.',
+   a:{i:['Чечевица варёная 200г','Говядина 150г','Морковь 80г','Лук 50г','Томатная паста 20г','Масло 10г'],k:690,p:60,f:22,c:57},
+   l:{i:['Чечевица варёная 140г','Говядина 100г','Морковь 60г','Лук 30г','Томатная паста 15г','Масло 7г'],k:477,p:40,f:16,c:40}},
+ ak:2111,ap:193,af:77,ac:129, lk:1450,lp:130,lf:51,lc:93},
+
+{d:'Суббота',
+ br:{title:'Блинчики на овсяной муке со skyr',howto:'Муку, яйца, молоко взбить в блендере. Жарить тонкие блинчики. Начинить skyr с бананом.',
+   a:{i:['Овсяная мука 80г','Яйца 2шт','Молоко 150мл','Масло 10г','Skyr 0% 150г','Банан 80г'],k:780,p:44,f:29,c:104},
+   l:{i:['Овсяная мука 50г','Яйцо 1шт','Молоко 100мл','Масло 5г','Skyr 0% 100г','Банан 60г'],k:470,p:26,f:15,c:66}},
+ sn:{title:'Тунец с овощами',howto:'Тунец смешать с нарезанными овощами, заправить оливковым маслом.',
+   a:{i:['Тунец в/с 200г','Огурец 150г','Помидор 120г','Оливки 30г','Масло 5г'],k:335,p:48,f:10,c:13},
+   l:{i:['Тунец в/с 130г','Огурец 100г','Помидор 80г'],k:154,p:30,f:1,c:8}},
+ di:{title:'Куриные бёдра с нутом и шпинатом (карри)',howto:'Куриные бёдра б/к обжарить 5 мин. Добавить томатную пасту, специи карри, нут и шпинат. Тушить 10 мин.',
+   a:{i:['Куриные бёдра б/к 200г','Нут варёный 200г','Шпинат 100г','Томатная паста 25г','Масло 10г'],k:810,p:66,f:22,c:72},
+   l:{i:['Куриные бёдра б/к 130г','Нут варёный 130г','Шпинат 80г','Томатная паста 15г','Масло 7г'],k:528,p:43,f:14,c:47}},
+ ak:2275,ap:188,af:70,ac:214, lk:1502,lp:129,lf:39,lc:146},
+
+{d:'Воскресенье',
+ br:{title:'Яичница с авокадо и цельнозерновым тостом',howto:'Авокадо размять с лимоном и солью. Намазать на поджаренный хлеб. Яйца пожарить или сделать пашот.',
+   a:{i:['Яйца 3шт','Авокадо 100г','Хлеб ц/з 80г','Помидор черри 100г','Масло 5г'],k:699,p:31,f:42,c:48},
+   l:{i:['Яйца 2шт','Авокадо 70г','Хлеб ц/з 50г','Помидор 80г'],k:436,p:18,f:28,c:30}},
+ sn:{title:'Skyr с ягодами и семенами чиа',howto:'Смешать skyr с размороженными ягодами и семенами чиа. Мёд по вкусу.',
+   a:{i:['Skyr 0% 250г','Ягоды замороженные 150г','Чиа 15г','Мёд 10г'],k:340,p:34,f:5,c:40},
+   l:{i:['Skyr 0% 150г','Ягоды замороженные 100г','Чиа 8г'],k:195,p:21,f:3,c:23}},
+ di:{title:'Говяжий стейк с перловкой и салатом',howto:'Стейк обжарить по 3-4 мин с каждой стороны, дать отдохнуть 5 мин. Перловку отварить 40 мин заранее.',
+   a:{i:['Говядина (стейк) 220г','Перловка варёная 220г','Огурец 100г','Помидор 100г','Масло 10г'],k:772,p:65,f:25,c:56},
+   l:{i:['Говядина 150г','Перловка варёная 150г','Огурец 80г','Помидор 80г','Масло 7г'],k:533,p:44,f:17,c:39}},
+ ak:2161,ap:160,af:81,ac:169, lk:1514,lp:113,lf:57,lc:117},
+
+// ── НЕДЕЛЯ 2 ──
+{d:'Понедельник',
+ br:{title:'Протеиновые оладьи на skyr с бананом',howto:'Skyr, банан, яйцо и муку смешать. Жарить оладьи по 2-3 мин с каждой стороны на антипригарной сковороде.',
+   a:{i:['Skyr 0% 200г','Банан 120г','Яйца 2шт','Овсяная мука 50г','Масло 8г'],k:640,p:42,f:21,c:83},
+   l:{i:['Skyr 0% 130г','Банан 80г','Яйцо 1шт','Овсяная мука 30г','Масло 5г'],k:398,p:26,f:11,c:52}},
+ sn:{title:'Варёные яйца с помидором и сыром',howto:'Яйца сварить вкрутую. Подавать с нарезанными овощами и сыром.',
+   a:{i:['Яйца 3шт','Помидор 150г','Сыр твёрдый 40г','Хлеб ц/з 40г'],k:553,p:40,f:33,c:23},
+   l:{i:['Яйца 2шт','Помидор 100г','Огурец 100г'],k:219,p:16,f:14,c:7}},
+ di:{title:'Куриные котлеты с киноа и стручковой фасолью',howto:'Куриный фарш с луком и чесноком в котлеты. Запечь 180°С 20 мин. Киноа отварить. Стручковую фасоль тушить 5-7 мин с маслом.',
+   a:{i:['Куриный фарш 300г','Киноа варёная 220г','Стручковая фасоль 180г','Масло 10г'],k:800,p:80,f:18,c:57},
+   l:{i:['Куриный фарш 180г','Киноа варёная 150г','Стручковая фасоль 130г','Масло 7г'],k:520,p:51,f:12,c:39}},
+ ak:2343,ap:192,af:81,ac:188, lk:1487,lp:123,lf:46,lc:123},
+
+{d:'Вторник',
+ br:{title:'Овсянка с яблоком и корицей',howto:'Варить на смеси молока и воды 5-7 мин. Добавить тёртое яблоко, мёд и корицу.',
+   a:{i:['Овсянка 90г','Молоко+вода 200мл','Яблоко 150г','Мёд 15г'],k:504,p:14,f:8,c:92},
+   l:{i:['Овсянка 60г','Молоко 150мл','Яблоко 100г','Мёд 10г'],k:380,p:10,f:6,c:65}},
+ sn:{title:'Skyr с огурцом и зеленью',howto:'Skyr смешать с тёртым огурцом, мелко нарезанной зеленью и чесноком — солёный вариант.',
+   a:{i:['Skyr 0% 270г','Огурец 150г','Зелень','Чеснок'],k:215,p:31,f:1,c:17},
+   l:{i:['Skyr 0% 180г','Огурец 100г','Зелень'],k:140,p:21,f:0,c:12}},
+ di:{title:'Запечённый лосось с рисом и овощами',howto:'Лосось натереть смесью масла и лимона. Овощи на противень, рыбу сверху. Запечь 190°С 20-25 мин.',
+   a:{i:['Лосось (филе/стейк) 200г','Рис варёный 200г','Кабачок 150г','Морковь 80г','Масло 12г'],k:869,p:58,f:38,c:67},
+   l:{i:['Лосось 130г','Рис варёный 140г','Кабачок 100г','Морковь 60г','Масло 8г'],k:568,p:38,f:26,c:47}},
+ ak:1938,ap:133,af:56,ac:201, lk:1438,lp:99,lf:41,lc:149},
+
+{d:'Среда',
+ br:{title:'Яично-skyr запеканка',howto:'Skyr, яйца, банан и хлопья взбить блендером или вилкой. Вылить в форму. Запечь 180°С 25-30 мин. Можно готовить с вечера.',
+   a:{i:['Skyr 0% 250г','Яйца 3шт','Банан 100г','Овсяные хлопья 40г'],k:570,p:53,f:17,c:65},
+   l:{i:['Skyr 0% 170г','Яйца 2шт','Банан 70г','Овсяные хлопья 25г'],k:385,p:36,f:11,c:45}},
+ sn:{title:'Курица с помидором и хлебом',howto:'Отварную курицу нарезать, подавать на хлебе с помидором и горчицей.',
+   a:{i:['Куриная грудка варёная 200г','Помидор 150г','Хлеб ц/з 60г','Горчица 10г'],k:530,p:70,f:8,c:34},
+   l:{i:['Куриная грудка варёная 120г','Помидор 100г','Хлеб ц/з 40г'],k:315,p:43,f:5,c:23}},
+ di:{title:'Макароны болоньезе',howto:'Лук и морковь обжарить, добавить фарш. Добавить томаты и итальянские травы, тушить 15 мин. Подать с макаронами.',
+   a:{i:['Макароны ц/з варёные 220г','Говяжий фарш 200г','Морковь 60г','Лук 50г','Томаты 150г','Масло 10г'],k:797,p:52,f:24,c:83},
+   l:{i:['Макароны ц/з варёные 150г','Говяжий фарш 130г','Морковь 40г','Лук 30г','Томаты 100г','Масло 7г'],k:530,p:34,f:15,c:55}},
+ ak:2247,ap:205,af:58,ac:207, lk:1580,lp:143,lf:40,lc:148},
+
+{d:'Четверг',
+ br:{title:'Рис с куриной грудкой (пикантный)',howto:'Рис отварить, добавить масло. Нарезанную отварную грудку смешать с рисом, посыпать зеленью.',
+   a:{i:['Рис варёный 230г','Куриная грудка варёная 150г','Масло сливочное 10г','Зелень'],k:560,p:48,f:14,c:52},
+   l:{i:['Рис варёный 160г','Куриная грудка варёная 100г','Масло сливочное 5г'],k:375,p:32,f:9,c:38}},
+ sn:{title:'Протеиновый смузи',howto:'Взбить всё в блендере до однородности. Пить сразу.',
+   a:{i:['Греческий йогурт 200г','Банан 120г','Молоко 150мл','Арахисовая паста 20г'],k:412,p:22,f:17,c:46},
+   l:{i:['Греческий йогурт 150г','Банан 80г','Молоко 100мл'],k:203,p:14,f:5,c:28}},
+ di:{title:'Запечённые куриные бёдра с нутом и перцем',howto:'Всё смешать на противне с маслом, паприкой и чесноком. Запечь 200°С 30 мин, периодически помешивая.',
+   a:{i:['Куриные бёдра б/к 200г','Нут варёный 220г','Помидоры 150г','Болгарский перец 100г','Масло 12г'],k:870,p:68,f:25,c:85},
+   l:{i:['Куриные бёдра б/к 130г','Нут варёный 150г','Помидоры 100г','Перец 80г','Масло 8г'],k:582,p:44,f:16,c:58}},
+ ak:2192,ap:168,af:65,ac:208, lk:1510,lp:120,lf:39,lc:149},
+
+{d:'Пятница',
+ br:{title:'Тост с тунцом и яйцом пашот',howto:'Хлеб поджарить. Шпинат обдать кипятком. Яйцо пашот (в кипящей воде с уксусом, 3 мин). Собрать тост.',
+   a:{i:['Хлеб ц/з 80г','Тунец в/с 130г','Яйца 2шт','Шпинат 50г','Масло 5г'],k:565,p:53,f:21,c:37},
+   l:{i:['Хлеб ц/з 50г','Тунец в/с 80г','Яйцо 1шт','Шпинат 40г'],k:303,p:32,f:12,c:22}},
+ sn:{title:'Skyr с бананом и грецкими орехами',howto:'Смешать skyr с нарезанным бананом и орехами. Мёд по вкусу.',
+   a:{i:['Skyr 0% 250г','Банан 100г','Грецкие орехи 25г','Мёд 10г'],k:420,p:36,f:10,c:52},
+   l:{i:['Skyr 0% 150г','Банан 80г','Грецкие орехи 15г'],k:252,p:22,f:6,c:34}},
+ di:{title:'Говядина тушёная с перловкой',howto:'Говядину обжарить, добавить овощи и томатную пасту. Залить водой, тушить 40-50 мин. Перловку отварить отдельно.',
+   a:{i:['Говядина (кусок) 230г','Перловка варёная 220г','Морковь 100г','Лук 50г','Томатная паста 20г','Масло 10г'],k:855,p:70,f:27,c:63},
+   l:{i:['Говядина 150г','Перловка варёная 150г','Морковь 70г','Лук 30г','Томатная паста 15г','Масло 7г'],k:572,p:44,f:18,c:43}},
+ ak:2190,ap:189,af:67,ac:177, lk:1477,lp:128,lf:45,lc:124},
+
+{d:'Суббота',
+ br:{title:'Overnight oats с йогуртом и ягодами',howto:'С вечера смешать овсянку с йогуртом, убрать в холодильник. Утром добавить ягоды, мёд и чиа — варить не нужно.',
+   a:{i:['Овсянка 80г','Греческий йогурт 200г','Ягоды замороженные 150г','Мёд 15г','Чиа 10г'],k:568,p:24,f:14,c:87},
+   l:{i:['Овсянка 55г','Греческий йогурт 150г','Ягоды 100г','Мёд 10г'],k:361,p:16,f:9,c:60}},
+ sn:{title:'Сырники на skyr с ягодным соусом',howto:'Тесто из skyr, яйца и муки — жарить по 2-3 мин с каждой стороны. Ягоды прогреть на сковороде — получится соус.',
+   a:{i:['Skyr 0% 200г','Яйцо 1шт','Рисовая мука 30г','Масло 8г','Ягоды 100г'],k:440,p:33,f:15,c:52},
+   l:{i:['Skyr 0% 130г','Яйцо 1шт','Рисовая мука 20г','Масло 5г','Ягоды 70г'],k:300,p:22,f:9,c:35}},
+ di:{title:'Куриная грудка с нутом и свежим салатом',howto:'Курицу запечь с травами 180°С 25 мин. Нут промыть. Овощи нарезать, заправить маслом и лимоном.',
+   a:{i:['Куриная грудка 220г','Нут варёный 180г','Огурец 120г','Помидор 120г','Перец 80г','Масло 12г'],k:829,p:72,f:21,c:62},
+   l:{i:['Куриная грудка 150г','Нут варёный 120г','Огурец 80г','Помидор 80г','Масло 8г'],k:542,p:47,f:14,c:42}},
+ ak:2187,ap:159,af:59,ac:226, lk:1553,lp:115,lf:41,lc:162},
+
+{d:'Воскресенье',
+ br:{title:'Яичница с лососем и шпинатом',howto:'Шпинат обжарить 2 мин, добавить яйца и нарезанный лосось. Готовить помешивая до готовности. Подавать с тостом.',
+   a:{i:['Яйца 3шт','Лосось слабосолёный / стейк 80г','Шпинат 100г','Масло 8г','Хлеб ц/з 50г'],k:663,p:46,f:37,c:30},
+   l:{i:['Яйца 2шт','Лосось 50г','Шпинат 80г','Масло 5г','Хлеб ц/з 30г'],k:426,p:30,f:23,c:18}},
+ sn:{title:'Протеиновый батончик + яблоко',howto:'Быстрый перекус без готовки. Берёте с собой или дома — батончик Quest/Barebells/Rule1 + любое яблоко.',
+   a:{i:['Протеиновый батончик ~55г (Б ~20г)','Яблоко 200г'],k:375,p:26,f:11,c:45},
+   l:{i:['Протеиновый батончик ~45г (Б ~16г)','Яблоко 150г'],k:297,p:21,f:9,c:35}},
+ di:{title:'Рис с говядиной и тушёными овощами',howto:'Говядину обжарить с луком, добавить томатную пасту и овощи, тушить 40 мин. Подавать с отварным рисом.',
+   a:{i:['Говядина (кусок/стейк) 220г','Рис варёный 220г','Кабачок 150г','Морковь 80г','Масло 12г','Томатная паста 15г'],k:880,p:72,f:28,c:66},
+   l:{i:['Говядина 150г','Рис варёный 150г','Кабачок 100г','Морковь 60г','Масло 8г','Томатная паста 10г'],k:598,p:48,f:18,c:45}},
+ ak:2268,ap:174,af:85,ac:166, lk:1671,lp:129,lf:59,lc:123}
+];
+
+const MEAL_ICONS = { br:'🌅', sn:'🥛', di:'🍽' };
+const MEAL_NAMES = { br:'Завтрак', sn:'Перекус', di:'Ужин' };
+
+let curWeek = 1;
+let curDay = 0;
+
+function switchWeek(w) {
+  curWeek = w;
+  curDay = 0;
+  document.querySelectorAll('.wtab').forEach((t,i)=>t.classList.toggle('active',i===w-1));
+  renderDayBtns();
+  renderDay();
+}
+
+function renderDayBtns() {
+  const base = (curWeek-1)*7;
+  const sel = document.getElementById('daysel');
+  sel.innerHTML = '';
+  for(let i=0;i<7;i++){
+    const d = menu[base+i];
+    const btn = document.createElement('button');
+    btn.className='dbtn'+(i===curDay?' active':'');
+    btn.textContent=`${['Пн','Вт','Ср','Чт','Пт','Сб','Вс'][i]} · ${['1','2','3','4','5','6','7','8','9','10','11','12','13','14'][base+i]}`;
+    btn.onclick=(()=>{const ii=i;return()=>{curDay=ii;renderDayBtns();renderDay();}})();
+    sel.appendChild(btn);
+  }
+}
+
+function macRow(m) {
+  return `<span class="kcal">${m.k} ккал</span><span class="mac mb">Б ${m.p}г</span><span class="mac mf">Ж ${m.f}г</span><span class="mac mc">У ${m.c}г</span>`;
+}
+
+function bar(val, target, col) {
+  const pct = Math.min(100, Math.round(val/target*100));
+  const c = pct<80?'#ef4444':pct>115?'#f97316':'#4ade80';
+  return `<div class="bar-wrap"><div class="bar-fill" style="width:${pct}%;background:${c}"></div></div>`;
+}
+
+function renderDay() {
+  const idx = (curWeek-1)*7 + curDay;
+  const day = menu[idx];
+  let html = '';
+
+  ['br','sn','di'].forEach(key=>{
+    const m = day[key];
+    html += `<div class="mcard">
+      <div class="mcard-head">
+        <span class="mcard-icon">${MEAL_ICONS[key]}</span>
+        <div><div class="mcard-title">${MEAL_NAMES[key]} — ${m.title}</div><div class="mcard-howto">${m.howto}</div></div>
+      </div>
+      <div class="mcard-body">
+        <div class="person-col">
+          <div class="pname alex">Алекс</div>
+          <div class="item-list">${m.a.i.join('<br>')}</div>
+          <div class="macros">${macRow(m.a)}</div>
+        </div>
+        <div class="person-col">
+          <div class="pname lera">Лера</div>
+          <div class="item-list">${m.l.i.join('<br>')}</div>
+          <div class="macros">${macRow(m.l)}</div>
+        </div>
+      </div>
+    </div>`;
+  });
+
+  // Evening snack
+  html += `<div class="eve-card">
+    <div class="eve-icon">🌙</div>
+    <div class="eve-body">
+      <div class="eve-title">Вечерний перекус — фиксированный (оба)</div>
+      <div class="eve-desc">Skyr / Epica протеиновый йогурт 150г + протеиновый батончик ~50г + чай</div>
+      <div class="eve-mac"><span class="kcal">~350 ккал</span><span class="mac mb">Б 30г</span><span class="mac mf">Ж 9г</span><span class="mac mc">У 25г</span></div>
+    </div>
+  </div>`;
+
+  // Daily summary — macro bars
+  const persons = [
+    {name:'Алекс',cls:'alex',k:day.ak,p:day.ap,f:day.af,c:day.ac,t:ALEX_T},
+    {name:'Лера',  cls:'lera', k:day.lk,p:day.lp,f:day.lf,c:day.lc,t:LERA_T}
+  ];
+  const macBars = ({name,cls,k,p,f,c,t}) => {
+    const rows = [
+      {lbl:'ккал',val:k, tgt:t.kcal, unit:'',  col:'#60a5fa'},
+      {lbl:'Б',   val:p, tgt:t.p,    unit:'г',  col:'#4ade80'},
+      {lbl:'Ж',   val:f, tgt:t.f,    unit:'г',  col:'#fbbf24'},
+      {lbl:'У',   val:c, tgt:t.c,    unit:'г',  col:'#f472b6'}
+    ];
+    return `<div class="mperson"><div class="mperson-name ${cls}">${name}</div>`+
+      rows.map(r=>{
+        const pct = Math.min(110, Math.round(r.val/r.tgt*100));
+        const bc = pct<80?'#ef4444':pct>108?'#f97316':r.col;
+        return `<div class="mbar-row"><div class="mbar-label">${r.lbl}</div>`+
+          `<div class="mbar-track"><div class="mbar-fill" style="width:${pct}%;background:${bc}"></div></div>`+
+          `<div class="mbar-val">${r.val}${r.unit}<span style="color:#333"> / ${r.tgt}${r.unit}</span></div></div>`;
+      }).join('')+`</div>`;
+  };
+  html += `<div class="day-sum">
+    <div class="sum-title">Итого за день (включая вечерний перекус)</div>
+    <div class="macro-grid">${persons.map(macBars).join('')}</div>
+  </div>`;
+
+  document.getElementById('content').innerHTML = html;
+}
+
+function toggleShop() {
+  const b = document.getElementById('shopbody');
+  b.classList.toggle('open');
+  document.querySelector('.shop-title').textContent = b.classList.contains('open')
+    ? '📋 Список покупок на неделю (на двоих) ▾'
+    : '📋 Список покупок на неделю (на двоих) ▸';
+}
+
+renderDayBtns();
+renderDay();
+
+// Dynamic apple-touch-icon (no separate PNG needed)
+(function(){
+  const cv = document.createElement('canvas'); cv.width=cv.height=180;
+  const cx = cv.getContext('2d');
+  cx.fillStyle='#111'; cx.fillRect(0,0,180,180);
+  cx.font='90px serif'; cx.textAlign='center'; cx.textBaseline='middle';
+  cx.fillText('🥗',90,95);
+  const lnk=document.createElement('link'); lnk.rel='apple-touch-icon'; lnk.href=cv.toDataURL();
+  document.head.appendChild(lnk);
+})();
+
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>

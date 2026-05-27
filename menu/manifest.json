@@ -1,0 +1,12 @@
+{
+  "name": "Меню на 2 недели — Алекс и Лера",
+  "short_name": "Меню",
+  "description": "Меню на 2 недели с БЖУ для Алекса и Леры",
+  "start_url": "index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#111111",
+  "theme_color": "#111111",
+  "lang": "ru",
+  "icons": []
+}

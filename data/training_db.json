@@ -1,0 +1,442 @@
+{
+  "meta": {
+    "owner": "italiantsev",
+    "weight_kg": 82,
+    "body_fat_pct": 15.5,
+    "goal": "body_recomposition",
+    "goal_notes": "Убрать жир (цель ~12-13% BF, -2-3 кг), нарастить грудь и руки, увеличить подтягивания",
+    "data_period": "2025-04-16 to 2026-04-13",
+    "total_sessions": 99,
+    "units": "lbs_and_machine_lbs",
+    "last_updated": "2026-05-26"
+  },
+
+  "locations": {
+    "home": {
+      "label": "Дом",
+      "equipment": ["турник (подвесной)", "гимнастические кольца", "резинки", "гиря до 40lb"],
+      "best_for": ["лёгкие тренировки", "поддержание", "техника", "подтягивания"]
+    },
+    "home_gym": {
+      "label": "Домашний зал",
+      "equipment": ["гантели до 50lb", "кабельная машина", "leg extension", "leg curl", "lat pulldown", "seated row"],
+      "best_for": ["изоляция", "техника", "контроль"]
+    },
+    "la_fitness": {
+      "label": "LA Fitness",
+      "equipment": ["штанги", "все гантели", "Hammer Strength", "кабели", "leg press", "hack squat", "все тренажёры"],
+      "best_for": ["тяжёлые дни", "прогрессия", "базовые упражнения"]
+    }
+  },
+
+  "exercise_library": {
+    "chest": {
+      "compound_horizontal": [
+        {"name": "Bench Press (Barbell)", "location": "la_fitness", "max_lb": 185, "notes": "основной жим, RIR 2-3"},
+        {"name": "Bench Press (Smith Machine)", "location": "la_fitness", "max_lb": 220, "notes": "меньше нагрузки на стабилизаторы"},
+        {"name": "Bench Press (Dumbbell)", "location": "home_gym", "max_lb": 55, "notes": "ограничен 50lb дома"},
+        {"name": "Bench Press Machine Home", "location": "home_gym", "max_lb": 190, "notes": "рабочий 180x12"},
+        {"name": "Chest Press (Machine)", "location": "la_fitness", "notes": ""},
+        {"name": "Iso-Lateral Chest Press (Machine)", "location": "la_fitness", "max_lb": 140, "notes": "per side"},
+        {"name": "Lying Chest Press (Machine) HOME", "location": "home_gym", "notes": ""},
+        {"name": "Chest Dip", "location": "la_fitness", "max_lb": 120, "notes": "нагружает передние дельты, осторожно"}
+      ],
+      "compound_incline": [
+        {"name": "Incline Bench Press (Barbell)", "location": "la_fitness", "max_lb": 135, "notes": "приоритет для верха груди"},
+        {"name": "Incline Bench Press (Dumbbell)", "location": "home_gym", "max_lb": 40, "notes": "30-45 градусов"},
+        {"name": "Incline Bench Press (Smith Machine)", "location": "la_fitness", "notes": ""},
+        {"name": "Incline Bench Press (Cable)", "location": "la_fitness/home_gym", "notes": ""},
+        {"name": "Incline Bench Press (at Home)", "location": "home_gym", "max_lb": 150, "notes": "вероятно cable machine"},
+        {"name": "Incline Bench Press Machine Home", "location": "home_gym", "max_lb": 130, "notes": ""},
+        {"name": "Incline Chest Press (Machine)", "location": "la_fitness", "notes": ""},
+        {"name": "Incline Chest Press Machine LA2", "location": "la_fitness", "notes": ""},
+        {"name": "Decline Bench Press (Barbell)", "location": "la_fitness", "notes": "нижняя грудь"},
+        {"name": "Decline Press Hammer Strength", "location": "la_fitness", "notes": "нижняя грудь"}
+      ],
+      "isolation": [
+        {"name": "Chest Fly", "location": "la_fitness", "max_lb": 70, "notes": "пауза в сведении 1-2 сек"},
+        {"name": "Chest Fly (Dumbbell)", "location": "home_gym", "max_lb": 15, "notes": ""},
+        {"name": "Incline Chest Fly (Dumbbell)", "location": "home_gym", "notes": ""},
+        {"name": "Cable Crossover", "location": "la_fitness", "notes": "mid-cable = средняя грудь"},
+        {"name": "Cable Crossover Home", "location": "home_gym", "notes": ""},
+        {"name": "Cable Crossover One Hand HOME", "location": "home_gym", "max_lb": 40, "notes": ""},
+        {"name": "Cable Crossover Seated Machine LA Fitness", "location": "la_fitness", "notes": ""},
+        {"name": "Chest Press Cable One Hand", "location": "home_gym", "notes": ""},
+        {"name": "Chets fly One Hand", "location": "home_gym", "notes": ""},
+        {"name": "Low-to-High Cable Fly One Arm HOME", "location": "home_gym", "max_lb": 20, "notes": "нижняя грудь, пауза в сведении"},
+        {"name": "Low-to-High Cable Press", "location": "la_fitness", "notes": "нижняя грудь"},
+        {"name": "Pectoral Fly LA Fitness", "location": "la_fitness", "notes": ""}
+      ],
+      "priority_notes": "Верх груди уже норм. Приоритет: нижняя грудь (low-to-high fly) и техника сведения. Уменьши передние дельты в жимах — думай 'свожу локти', а не 'толкаю'."
+    },
+
+    "back": {
+      "vertical_pull": [
+        {"name": "Lat Pulldown (Cable)", "location": "la_fitness", "max_lb": 160, "recent_lb": 115, "notes": "рабочий 115x13"},
+        {"name": "Lat Pulldown (Machine)", "location": "la_fitness", "notes": ""},
+        {"name": "Lat Pulldown Cable Home", "location": "home_gym", "max_lb": 115, "notes": ""},
+        {"name": "Lat Pulldown - Underhand (Cable)", "location": "la_fitness", "notes": "больше бицепс"},
+        {"name": "Lat Pulldown (Single Arm)", "location": "la_fitness", "notes": ""},
+        {"name": "Pull Up", "location": "home/la_fitness", "max_reps": 13, "notes": "цель: 15+ подряд"},
+        {"name": "Pull Up (Assisted)", "location": "la_fitness/home_gym", "notes": "облегчение 25-85lb"},
+        {"name": "Pull Up (Band)", "location": "home_gym", "notes": ""},
+        {"name": "Scapular Pull-Up", "location": "home/la_fitness", "notes": "активация лопаток, разминка"}
+      ],
+      "horizontal_pull": [
+        {"name": "Seated Row (Cable)", "location": "la_fitness", "max_lb": 120, "notes": "рабочий 100x15"},
+        {"name": "Seated Row (Machine)", "location": "la_fitness", "notes": ""},
+        {"name": "Seated Row Cable Home", "location": "home_gym", "max_lb": 85, "notes": "рабочий 85x13"},
+        {"name": "T Bar Row", "location": "la_fitness", "notes": "хорошо для толщины спины"},
+        {"name": "Bent Over Row (Barbell)", "location": "la_fitness", "notes": ""},
+        {"name": "Bent Over One Arm Row (Dumbbell)", "location": "home_gym", "notes": ""},
+        {"name": "Incline Row (Dumbbell)", "location": "home_gym", "notes": ""},
+        {"name": "Inverted Row (Bodyweight)", "location": "home", "notes": ""},
+        {"name": "Single Arm Cable Row", "location": "la_fitness", "max_lb": 57.5, "notes": ""},
+        {"name": "Single Arm Cable Row HOME", "location": "home_gym", "max_lb": 40, "notes": ""},
+        {"name": "Leverage Row", "location": "la_fitness", "notes": ""},
+        {"name": "High Row Machine LA", "location": "la_fitness", "notes": ""},
+        {"name": "Hight Row", "location": "la_fitness", "notes": ""},
+        {"name": "Back Extension (Machine)", "location": "la_fitness", "notes": "поясница и ягодицы"}
+      ],
+      "isolation": [
+        {"name": "Straight Arm Cable Pulldown", "location": "la_fitness", "max_lb": 80, "notes": "изоляция широчайших без бицепса"},
+        {"name": "Straight Arm Cable Pulldown HOME", "location": "home_gym", "max_lb": 50, "notes": ""},
+        {"name": "Straight Arm Cable Pull Down One Arm", "location": "la_fitness", "notes": ""},
+        {"name": "Pullover (Dumbbell)", "location": "la_fitness", "notes": ""},
+        {"name": "Dedlift (Cable)", "location": "home_gym", "notes": "становая на кабеле"},
+        {"name": "Romanian Deadlift (Barbell)", "location": "la_fitness", "notes": ""},
+        {"name": "Romanian Deadlift (Dumbbell)", "location": "home_gym", "max_lb": 45, "notes": "отличное упражнение, недооценено"}
+      ],
+      "priority_notes": "Дефицит vs груди ~28% за год. Важно добавить тягу к каждому грудному дню. Баланс push:pull должен быть 1:1 минимум."
+    },
+
+    "shoulders": {
+      "press": [
+        {"name": "Strict Military Press (Barbell)", "location": "la_fitness", "max_lb": 53, "notes": ""},
+        {"name": "Overhead Press (Barbell)", "location": "la_fitness", "max_lb": 95, "notes": "рабочий 95x8"},
+        {"name": "Seated Overhead Press (Dumbbell)", "location": "home_gym", "notes": ""},
+        {"name": "Shoulder Press (Machine)", "location": "la_fitness", "notes": ""},
+        {"name": "Shoulder Press Machine HOME", "location": "home_gym", "notes": ""},
+        {"name": "Shoulder Press Machine LA", "location": "la_fitness", "notes": ""},
+        {"name": "Arnold Press (Dumbbell)", "location": "home_gym", "notes": ""}
+      ],
+      "lateral_raises": [
+        {"name": "Lateral Raise (Dumbbell)", "location": "home_gym", "max_lb": 12.5, "notes": "рабочий 10lb — низкий, есть потенциал"},
+        {"name": "Lateral Raise (Cable)", "location": "la_fitness", "notes": "кабель = равномерное натяжение, лучше гантелей"},
+        {"name": "Lateral Raise (Machine)", "location": "la_fitness", "notes": ""},
+        {"name": "Lateral Raise Cable Home", "location": "home_gym", "max_lb": 20, "notes": ""},
+        {"name": "Lateral Cable Raise LA fitness", "location": "la_fitness", "notes": ""},
+        {"name": "Dumbbell Lateral Raise (Seated)", "location": "home_gym", "notes": ""},
+        {"name": "Lateral Raise Dumbbel One Hand", "location": "home_gym", "notes": ""}
+      ],
+      "rear_delts": [
+        {"name": "Face Pull (Cable)", "location": "la_fitness", "notes": "ОБЯЗАТЕЛЬНО — профилактика плеч, укрепляет задние дельты"},
+        {"name": "Face pull Cable LA Fitness", "location": "la_fitness", "notes": ""},
+        {"name": "Reverse Fly (Cable)", "location": "la_fitness", "notes": ""},
+        {"name": "Reverse Fly (Dumbbell)", "location": "home_gym", "max_lb": 10, "notes": ""},
+        {"name": "Reverse Fly (Machine)", "location": "la_fitness", "max_lb": 70, "notes": ""},
+        {"name": "Reverse Fly Cable One Hand HOME", "location": "home_gym", "max_lb": 20, "notes": ""},
+        {"name": "Reverse Fly Cable One Hand LA Fitness", "location": "la_fitness", "notes": ""}
+      ],
+      "priority_notes": "Передние дельты ПЕРЕГРУЖЕНЫ жимами — не добавлять жимовые упражнения на плечи. Фокус: средняя дельта (lateral raise) + задняя дельта (face pull, reverse fly). Face pull — обязательно каждую тренировку для здоровья плеч."
+    },
+
+    "biceps": {
+      "exercises": [
+        {"name": "Bicep Curl (Barbell)", "location": "la_fitness", "notes": ""},
+        {"name": "Bicep Curl (Cable)", "location": "la_fitness", "notes": ""},
+        {"name": "Bicep Curl (Dumbbell)", "location": "home_gym", "notes": ""},
+        {"name": "Hammer Curl (Dumbbell)", "location": "home_gym", "max_lb": 110, "notes": "ВНИМАНИЕ: 110lb — похоже это баг в данных (both arms total?), реальный вес вероятно 30-35lb/рука"},
+        {"name": "Lat Pulldown - Underhand (Cable)", "location": "la_fitness", "notes": "вторичная нагрузка на бицепс"},
+        {"name": "Pull Up", "location": "home", "notes": "сильная нагрузка на бицепс и предплечья"}
+      ],
+      "priority_notes": "КРИТИЧЕСКИЙ ДЕФИЦИТ. 40 sets за 12 месяцев vs рекомендуемые 8-20/week. Слабые предплечья и бицепс ОГРАНИЧИВАЮТ подтягивания и тяги. 2-3 подхода curl в конце каждой спинной тренировки — обязательно."
+    },
+
+    "triceps": {
+      "exercises": [
+        {"name": "Triceps Extension", "location": "la_fitness/home_gym", "notes": ""},
+        {"name": "Triceps Extension (Cable)", "location": "la_fitness/home_gym", "notes": ""},
+        {"name": "Triceps Extension (Dumbbell)", "location": "home_gym", "notes": ""},
+        {"name": "Triceps Pushdown (Cable - Straight Bar)", "location": "la_fitness", "notes": ""},
+        {"name": "Chest Dip", "location": "la_fitness", "notes": "вторичная нагрузка на трицепс"}
+      ],
+      "priority_notes": "КРИТИЧЕСКИЙ ДЕФИЦИТ. 53 sets за 12 месяцев. Трицепс работает на жимах, но изоляции почти нет. 2-3 подхода pushdown в конце грудного дня — добавить обязательно для роста рук."
+    },
+
+    "legs": {
+      "compound": [
+        {"name": "Leg Press", "location": "la_fitness", "max_lb": 630, "notes": "очень сильно, рабочий 450x15"},
+        {"name": "Hack Squat", "location": "la_fitness", "max_lb": 410, "notes": "рабочий 360x15"},
+        {"name": "Hammer Strength Linear Hack Press", "location": "la_fitness", "notes": ""},
+        {"name": "Seated Leg Press (Machine)", "location": "la_fitness", "notes": ""},
+        {"name": "Squat (Smith Machine)", "location": "la_fitness", "notes": ""},
+        {"name": "Squat (Dumbbell)", "location": "home_gym", "notes": ""},
+        {"name": "Squat Machine HOME", "location": "home_gym", "notes": ""},
+        {"name": "Goblet Squat (Kettlebell)", "location": "home", "max_lb": 100, "notes": "нагружает поясницу, ограниченная нагрузка без тяжёлой гири"},
+        {"name": "Bulgarian Split Squat", "location": "home_gym", "max_lb": 20, "notes": "отличное упражнение, поднять вес до 40-50lb/рука"},
+        {"name": "Romanian Deadlift (Barbell)", "location": "la_fitness", "notes": ""},
+        {"name": "Romanian Deadlift (Dumbbell)", "location": "home_gym", "max_lb": 45, "notes": "хорошо для ягодиц и хамстрингов"}
+      ],
+      "isolation": [
+        {"name": "Leg Extension (Machine)", "location": "home_gym", "max_lb": 200, "notes": "рабочий 180-200x10-12"},
+        {"name": "Seated Leg Curl (Machine)", "location": "home_gym", "max_lb": 150, "notes": "рабочий 150x12"},
+        {"name": "Lying Leg Curl (Machine)", "location": "la_fitness", "notes": ""},
+        {"name": "Calf Press on Leg Press", "location": "la_fitness", "notes": ""},
+        {"name": "Seated Calf Raise (Machine)", "location": "la_fitness", "notes": ""},
+        {"name": "Seated Calf Raise (Plate Loaded)", "location": "la_fitness", "notes": ""},
+        {"name": "Standing Calf Raise (Bodyweight)", "location": "home", "notes": ""}
+      ],
+      "priority_notes": "Ноги сильные (Leg Press 630lb — топ-уровень). Кардио (ролики, велик, бег) даёт дополнительную нагрузку. Приоритет дома — leg extension + leg curl + RDL для ягодиц и хамстрингов. Ягодицы: Bulgarian Split Squat + RDL вместо hip thrust (нет тренажёра)."
+    },
+
+    "core": {
+      "exercises": [
+        {"name": "Cable Crunch", "location": "la_fitness", "notes": ""},
+        {"name": "Cable Crunch Home", "location": "home_gym", "max_lb": 120, "notes": "рабочий 100-120"},
+        {"name": "Crunch (Machine)", "location": "la_fitness", "notes": ""},
+        {"name": "Crunch Machine LA Fitness", "location": "la_fitness", "notes": ""},
+        {"name": "Abdominal Crunch Machine LA", "location": "la_fitness", "notes": ""},
+        {"name": "Oblique Crunch Machine LA", "location": "la_fitness", "notes": ""},
+        {"name": "Back Extension (Machine)", "location": "la_fitness", "notes": ""}
+      ],
+      "priority_notes": "Пресс появится через питание, не через упражнения. 2-3 подхода cable crunch в конце тренировки достаточно. Главное — дефицит калорий."
+    },
+
+    "forearms": {
+      "exercises": [
+        {"name": "Wrist Curl Barbell", "location": "la_fitness", "notes": ""},
+        {"name": "Seated Palms Up Wrist Curl (Barbell)", "location": "la_fitness", "notes": ""},
+        {"name": "Seated Palms Up Wrist Curl (Dumbbell)", "location": "home_gym", "notes": ""},
+        {"name": "Reverse Wrist Curl EZ", "location": "la_fitness", "notes": ""}
+      ],
+      "priority_notes": "Предплечья устают на подтягиваниях — слабое звено. Можно добавить wrist curl 2x15 в конце. Не критично — со временем окрепнут от объёма тяг."
+    }
+  },
+
+  "volume_targets": {
+    "source": "RP Strength (Israetel), Schoenfeld 2016-2024, научный консенсус 2024",
+    "notes": "MEV = минимальный эффективный объём, MAV = оптимальный диапазон для гипертрофии, MRV = максимальный. Подходов/неделю. ВАЖНО: объёмы считаются с учётом ВТОРИЧНОЙ нагрузки (тяги = 0.5 сета бицепса, жимы = 0.5 сета трицепса). Данные пересчитаны по реальным тренировкам Oct 2025 - Apr 2026, 62 сессии.",
+    "methodology": {
+      "primary_load": "1.0 — упражнение нацелено на мышцу",
+      "secondary_load": "0.5 — мышца работает как синергист (тяги→бицепс, жимы→трицепс)",
+      "avg_sessions_per_week": 2.0,
+      "avg_sets_per_session": {"chest": 5.0, "back": 5.0, "biceps_total": 2.6, "triceps_total": 2.2, "shoulders_mid": 1.2, "shoulders_rear": 1.7, "legs": 2.7, "core": 0.5}
+    },
+    "muscles": {
+      "chest": {
+        "MEV": 8, "MAV_low": 10, "MAV_high": 20, "MRV": 22,
+        "current_weekly_avg_2x": 10,
+        "current_weekly_avg_3x": 15,
+        "status": "ok",
+        "note": "В норме при 2+ тренировках/нед. Не нужно увеличивать объём — нужно улучшить технику (сведение vs толкание)."
+      },
+      "back": {
+        "MEV": 8, "MAV_low": 10, "MAV_high": 25, "MRV": 25,
+        "current_weekly_avg_2x": 10,
+        "current_weekly_avg_3x": 15,
+        "status": "ok",
+        "note": "В норме с учётом косвенной нагрузки (RDL, back extension добавляют 0.5). Предыдущая оценка 'нужно больше' была ошибкой — не учитывались вторичные подходы."
+      },
+      "shoulders_lateral": {
+        "MEV": 6, "MAV_low": 8, "MAV_high": 16, "MRV": 20,
+        "current_weekly_avg_2x": 2.4,
+        "current_weekly_avg_3x": 3.5,
+        "status": "below_mev",
+        "note": "РЕАЛЬНАЯ проблема. Lateral raise делается непоследовательно — многие тренировки без него. Добавить в КАЖДУЮ сессию 3×15. Жимовые упражнения на плечи НЕ добавлять — передние дельты перегружены жимами груди."
+      },
+      "biceps": {
+        "MEV": 6, "MAV_low": 8, "MAV_high": 20, "MRV": 26,
+        "current_weekly_avg_2x": 5.3,
+        "current_weekly_avg_3x": 7.9,
+        "note_on_secondary": "Включает: 0.5 сета за каждый подход тяги (Lat Pulldown, Seated Row, Pull Up, т.д.)",
+        "status": "borderline",
+        "note": "НЕ критично — предыдущая оценка была ошибочной (косвенная работа на тягах не учитывалась). При 2x/нед = 5.3 (немного ниже MEV), при 3x = 7.9 (в норме). Добавить 2-3 прямых подхода Bicep Curl после спинных тренировок — это ускорит прогресс в подтягиваниях (предплечья лимитируют)."
+      },
+      "triceps": {
+        "MEV": 4, "MAV_low": 6, "MAV_high": 20, "MRV": 22,
+        "current_weekly_avg_2x": 4.3,
+        "current_weekly_avg_3x": 6.5,
+        "note_on_secondary": "Включает: 0.5 сета за каждый подход жима (Bench Press, Incline, Chest Dip, т.д.)",
+        "status": "ok_minimal",
+        "note": "НЕ критично — предыдущая оценка была ошибочной. При 2x/нед = 4.3 (на уровне MEV), при 3x = 6.5 (в MAV). Можно добавить 2-3 подхода изоляции для роста рук, но не срочно."
+      },
+      "shoulders_rear": {
+        "MEV": 4, "MAV_low": 6, "MAV_high": 16, "MRV": 20,
+        "current_weekly_avg_2x": 3.5,
+        "current_weekly_avg_3x": 5.2,
+        "status": "borderline",
+        "note": "Reverse Fly / Face Pull делается, но не каждую тренировку. При 2x/нед чуть ниже MEV. Face Pull обязателен каждую сессию — это ещё и здоровье плеч, профилактика боли в трапециях."
+      },
+      "quads": {
+        "MEV": 8, "MAV_low": 10, "MAV_high": 20, "MRV": 20,
+        "current_weekly_avg_2x": 5.5,
+        "note_on_cardio": "Ролики/велик добавляют значительный объём для квадрицепсов",
+        "status": "ok_with_cardio",
+        "note": "С кардио — достаточно. Ноги сильные (Leg Press 630 lbs, Hack Squat 410 lbs). Leg extension + leg curl 2x/нед дома = поддержание без деградации."
+      },
+      "hamstrings": {
+        "MEV": 6, "MAV_low": 10, "MAV_high": 20, "MRV": 20,
+        "current_weekly_avg_2x": 2.7,
+        "status": "below_mev",
+        "note": "RDL с гантелями 3×12 — лучшее упражнение для хамстрингов дома без штанги. Добавить в ножные дни регулярно."
+      },
+      "glutes": {
+        "MEV": 4, "MAV_low": 6, "MAV_high": 16, "MRV": 20,
+        "status": "low_but_cardio",
+        "note": "Ролики/велик дают умеренную нагрузку на ягодицы. Без hip thrust тренажёра замена: Bulgarian Split Squat + RDL."
+      },
+      "core": {
+        "MEV": 8, "MAV_low": 10, "MAV_high": 16, "MRV": 20,
+        "current_weekly_avg_2x": 0.9,
+        "status": "inconsistent",
+        "note": "Нерегулярно — есть месяцы с нормальным объёмом (фев-март 2026: 13-14 сетов/мес), есть с нулём. 2-3 подхода cable crunch в конце каждой тренировки решает вопрос."
+      }
+    }
+  },
+
+  "performance_benchmarks": {
+    "last_updated": "2026-04-13",
+    "lifts": {
+      "bench_press_barbell": {"max_lb": 185, "note": "1RM оценочный ~210-220lb если использовать Epley"},
+      "bench_press_smith": {"max_lb": 220, "note": "Smith легче штанги на ~10-15%"},
+      "incline_bench_barbell": {"max_lb": 135, "note": ""},
+      "bench_dumbbell": {"max_lb": 55, "per_hand": true, "note": "ограничен наличием 50lb в домашнем зале"},
+      "lat_pulldown": {"max_lb": 160, "recent_lb": 115, "note": "откат с пика — восстановить до 130-140"},
+      "seated_row": {"max_lb": 120, "recent_lb": 100, "note": ""},
+      "pull_up_max_reps": {"value": 13, "note": "цель: 15 чистых; слабое звено — предплечья и бицепс"},
+      "overhead_press_barbell": {"max_lb": 95, "note": "рабочий 95x8"},
+      "leg_press": {"max_lb": 630, "note": "очень сильно для 82кг"},
+      "hack_squat": {"max_lb": 410, "note": ""},
+      "leg_extension": {"max_lb": 200, "note": ""},
+      "leg_curl": {"max_lb": 150, "note": ""}
+    }
+  },
+
+  "training_history_monthly": {
+    "sets_per_muscle": {
+      "notes": "Подходы в месяц по мышечным группам",
+      "2025-04": {"sessions": 4,  "chest": 49,  "back": 28, "shoulders": 12, "biceps": 3,  "triceps": 3,  "legs": 6,  "core": 0},
+      "2025-05": {"sessions": 2,  "chest": 12,  "back": 9,  "shoulders": 3,  "biceps": 0,  "triceps": 0,  "legs": 6,  "core": 0},
+      "2025-06": {"sessions": 6,  "chest": 47,  "back": 39, "shoulders": 18, "biceps": 2,  "triceps": 4,  "legs": 8,  "core": 0},
+      "2025-07": {"sessions": 9,  "chest": 76,  "back": 57, "shoulders": 24, "biceps": 5,  "triceps": 8,  "legs": 32, "core": 0},
+      "2025-08": {"sessions": 7,  "chest": 45,  "back": 41, "shoulders": 22, "biceps": 3,  "triceps": 3,  "legs": 29, "core": 0},
+      "2025-09": {"sessions": 9,  "chest": 73,  "back": 47, "shoulders": 30, "biceps": 5,  "triceps": 9,  "legs": 40, "core": 0},
+      "2025-10": {"sessions": 9,  "chest": 68,  "back": 45, "shoulders": 25, "biceps": 4,  "triceps": 6,  "legs": 40, "core": 0},
+      "2025-11": {"sessions": 11, "chest": 50,  "back": 61, "shoulders": 26, "biceps": 3,  "triceps": 3,  "legs": 48, "core": 3},
+      "2025-12": {"sessions": 14, "chest": 63,  "back": 61, "shoulders": 79, "biceps": 15, "triceps": 18, "legs": 40, "core": 2},
+      "2026-01": {"sessions": 10, "chest": 64,  "back": 50, "shoulders": 61, "biceps": 13, "triceps": 13, "legs": 17, "core": 0},
+      "2026-02": {"sessions": 7,  "chest": 47,  "back": 37, "shoulders": 22, "biceps": 2,  "triceps": 2,  "legs": 19, "core": 14},
+      "2026-03": {"sessions": 8,  "chest": 56,  "back": 34, "shoulders": 19, "biceps": 0,  "triceps": 0,  "legs": 31, "core": 13},
+      "2026-04": {"sessions": 3,  "chest": 26,  "back": 29, "shoulders": 9,  "biceps": 0,  "triceps": 0,  "legs": 0,  "core": 4}
+    },
+    "trends": {
+      "peak_month": "2025-12",
+      "peak_sessions": 14,
+      "recent_decline": "С января 2026 частота падает, апрель 2026 — критически низко (3 тренировки)",
+      "consistency_issue": "Нестабильность частоты — главный враг прогресса. Лучше 3x/неделю постоянно, чем 5x одну неделю и 0 следующую.",
+      "best_period": "Ноябрь-декабрь 2025 — хороший баланс грудь/спина и максимальная частота",
+      "push_pull_ratio_avg": "714:513 = 1.39:1 за всё время (должно быть 1:1 или лучше 1:1.2 в пользу тяги)"
+    }
+  },
+
+  "weekly_plan_template": {
+    "philosophy": "Push/Pull/Legs разбитые по локациям. 3-4 тренировки в зале + 1-2 кардио (ролики/велик).",
+    "days": {
+      "mon": {
+        "label": "Грудь + Спина + Задняя дельта",
+        "location": "home_gym / la_fitness",
+        "exercises": [
+          "Bench Press или Incline Bench (основной жим) — 3-4x8-12",
+          "Low-to-High Cable Fly (нижняя грудь, пауза) — 3x12-15",
+          "Lat Pulldown — 3-4x10-13",
+          "Seated Row — 3x12",
+          "Reverse Fly или Face Pull — 3x15",
+          "Lateral Raise — 3x15",
+          "Bicep Curl — 2-3x12 (ОБЯЗАТЕЛЬНО)",
+          "Triceps Pushdown — 2-3x15 (ОБЯЗАТЕЛЬНО)"
+        ],
+        "duration_min": 60
+      },
+      "tue": {
+        "label": "Кардио — ролики / велик",
+        "notes": "45-75 мин, пульс 130-150. Восстановительное кардио = лучше жиросжигание",
+        "duration_min": 60
+      },
+      "wed": {
+        "label": "Спина (акцент) + Бицепс + Кор",
+        "location": "home_gym / la_fitness",
+        "exercises": [
+          "Pull Up / Assisted — 3-4 подхода (цель: прогрессия)",
+          "Seated Row — 4x12",
+          "Single Arm Row или T-Bar Row — 3x12",
+          "Straight Arm Pulldown — 3x15",
+          "Bicep Curl — 3x12",
+          "Hammer Curl — 2x12",
+          "Cable Crunch — 3x15"
+        ],
+        "duration_min": 55
+      },
+      "thu": {
+        "label": "Отдых или лёгкая прогулка",
+        "notes": "ЦНС восстанавливается. Не пропускать отдых — он часть программы."
+      },
+      "fri": {
+        "label": "Грудь (акцент наклон) + Плечи",
+        "location": "home_gym / la_fitness",
+        "exercises": [
+          "Incline Bench Press — 4x10-12 (ПЕРВОЕ УПРАЖНЕНИЕ для верха груди)",
+          "Flat Bench Press или Machine — 3x10",
+          "Cable Fly или Chest Fly — 3x15 (пауза в сведении)",
+          "Lateral Raise — 4x15",
+          "Face Pull — 3x20",
+          "Reverse Fly — 3x15",
+          "Triceps Pushdown — 3x15"
+        ],
+        "duration_min": 60
+      },
+      "sat": {
+        "label": "Ноги + Кор",
+        "location": "home_gym / la_fitness",
+        "exercises": [
+          "Leg Extension — 3-4x12",
+          "Leg Curl — 3x12",
+          "Bulgarian Split Squat — 3x12 (или Goblet/RDL если нет места)",
+          "Romanian Deadlift (Dumbbell) — 3x12",
+          "Cable Crunch или Crunch Machine — 3x15"
+        ],
+        "duration_min": 45
+      },
+      "sun": {
+        "label": "Отдых или кардио лёгкое"
+      }
+    }
+  },
+
+  "recommendations": {
+    "priority_1_immediate": [
+      "Добавить Bicep Curl 2-3 подхода в КАЖДУЮ тренировку спины — это единственный способ улучшить подтягивания быстро",
+      "Добавить Triceps Pushdown 2-3 подхода в КАЖДУЮ грудную тренировку — руки не растут без изоляции",
+      "Face Pull 3x15-20 в конце КАЖДОЙ тренировки — профилактика боли в плечах (трапеции и передняя дельта перегружены жимами)",
+      "В жимах думать 'свожу локти' а не 'толкаю вес' — это переключит нагрузку с передней дельты на грудь"
+    ],
+    "priority_2_structure": [
+      "Incline Bench Press должен быть ПЕРВЫМ упражнением в грудной день, не вторым (свежая мышца даёт лучший стимул)",
+      "Соотношение тяга:жим = 1:1 минимум. Сейчас 1:1.4 в пользу жима — добавить тягу к каждой грудной",
+      "3 тренировки в неделю постоянно > нерегулярные 5-6 раз. Стабильность важнее интенсивности",
+      "Подтягивания с резинкой: 3x8-10 вместо 3x6 до отказа — больше объёма, лучше техника, быстрее прогресс"
+    ],
+    "priority_3_body_recomp": [
+      "Пресс = питание, не скручивания. При 15-16% BF нужно убрать 2-3 кг жира. Дефицит 200-300 ккал/день + 1.8-2г белка/кг (147-164г/день при 82кг)",
+      "Кардио уже достаточно — ролики/велик на пульсе 130-145 оптимально для жиросжигания без потери мышц",
+      "До видимого нижнего пресса: ~12-13% BF = минус 2.5-3 кг от текущего веса"
+    ],
+    "science_notes": [
+      "Гипертрофия: лучшая зона — 6-20 повторений при RIR 1-3 (2-3 повтора до отказа). Последний подход можно до отказа.",
+      "Прогрессия важнее: каждую неделю +1 повторение или +2.5-5 lb в одном подходе = прогресс. Не менять программу слишком часто.",
+      "Время под нагрузкой: медленнее опускать (2-3 сек) = лучше стимул для гипертрофии, особенно грудь и бицепс",
+      "Отдых между подходами: 2-3 мин для тяжёлых (жим, тяга); 60-90 сек для изоляции (fly, curl, lateral raise)",
+      "Восстановление: мышца нуждается в 48-72ч отдыха. Одна мышечная группа 2-3 раза в неделю = оптимально."
+    ]
+  }
+}
